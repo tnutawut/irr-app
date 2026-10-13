@@ -2,8 +2,10 @@
 (function () {
   "use strict";
 
+  // ค่าสำรอง: ใช้เมื่อโหลด config.js ไม่ได้ (เช่น แคชเก่า หรืออัปโหลดไฟล์ไม่ครบ)
+  const DEFAULT_API = "https://script.google.com/macros/s/AKfycbzO5ONgYvGXy0ZgK89-DXO76-hEG3Cb6IyQfcycAcSquN8jd4BAX72VTx3WNRksQHIJfg/exec";
   const CFG = window.IRR_CONFIG || {};
-  const API = (CFG.apiUrl || "").trim();
+  const API = (CFG.apiUrl || DEFAULT_API).trim();
   const STORE_KEY = "irr-data-v1";
   const TAX_CAP = 100000;       // เบี้ยประกันชีวิตลดหย่อนภาษีได้สูงสุด 100,000 บาท/ปี
   const SPLASH_MIN = 2900;      // ความยาวอนิเมชันโลโก้ (มิลลิวินาที)
