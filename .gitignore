@@ -1,0 +1,6 @@
+# ไฟล์ส่วนตัว/ของโปรเจกต์อื่น ไม่ขึ้น GitHub
+CLAUDE.md
+MT Finance Design System.md
+.claude/
+.DS_Store
+node_modules/

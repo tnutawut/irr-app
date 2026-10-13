@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>IRR</title>
+  <meta name="description" content="ดูผลตอบแทน IRR ของแบบประกันตามเพศ อายุ เบี้ยประกัน และฐานภาษี">
+  <meta name="theme-color" content="#F2F9FE">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="IRR">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=2">
+</head>
+<body>
+  <!-- ════ อนิเมชันโลโก้ตอนเปิดแอป ════ -->
+  <div class="splash" id="splash" aria-hidden="true">
+    <div class="splash-stage">
+      <img class="lg lg-shadow" src="assets/logo/logo-shadow.png" alt="">
+      <img class="lg lg-n" src="assets/logo/logo-n.png" alt="">
+      <img class="lg lg-u" src="assets/logo/logo-u.png" alt="">
+      <img class="lg lg-t" src="assets/logo/logo-t.png" alt="">
+      <img class="lg lg-awut" src="assets/logo/logo-awut.png" alt="">
+      <img class="lg lg-amapon" src="assets/logo/logo-amapon.png" alt="">
+      <span class="lg-shine"></span>
+    </div>
+    <div class="splash-load" id="splashLoad"><span></span></div>
+  </div>
+
+  <main class="app" id="app">
+    <header class="top">
+      <img class="top-logo" src="assets/logo/logo-full.png" alt="Nutawut Tamapon" width="1200" height="328">
+      <h1 class="title">IRR</h1>
+      <p class="lead">กรุณาระบุข้อมูล</p>
+      <p class="badge" id="mockBadge" hidden>ข้อมูลตัวอย่าง · ยังไม่เชื่อม Google Sheet</p>
+    </header>
+
+    <form class="card form" id="form" novalidate>
+      <div class="field">
+        <label for="product">แบบประกัน</label>
+        <select id="product" disabled><option value="">กำลังโหลดข้อมูล…</option></select>
+      </div>
+      <div class="field">
+        <label for="gender">เพศ</label>
+        <select id="gender" disabled><option value="">เลือกแบบประกันก่อน</option></select>
+      </div>
+      <div class="field">
+        <label for="age">อายุ</label>
+        <select id="age" disabled><option value="">เลือกเพศก่อน</option></select>
+      </div>
+      <div class="field">
+        <label for="premium">เบี้ยประกัน (ต่อปี)</label>
+        <select id="premium" disabled><option value="">เลือกอายุก่อน</option></select>
+      </div>
+      <div class="field">
+        <label for="tax">ฐานภาษี</label>
+        <select id="tax">
+          <option value="">เลือกฐานภาษี</option>
+          <option value="0">0%</option>
+          <option value="5">5%</option>
+          <option value="10">10%</option>
+          <option value="15">15%</option>
+          <option value="20">20%</option>
+          <option value="25">25%</option>
+          <option value="30">30%</option>
+          <option value="35">35%</option>
+        </select>
+      </div>
+      <button class="btn" id="calc" type="submit" disabled><span>คำนวณ IRR</span></button>
+      <p class="err" id="loadErr" hidden></p>
+    </form>
+
+    <section class="card result" id="result" hidden aria-live="polite"></section>
+
+    <footer class="foot" id="foot"></footer>
+  </main>
+
+  <script src="config.js?v=2"></script>
+  <script src="mock-data.js?v=2"></script>
+  <script src="app.js?v=2"></script>
+</body>
+</html>
