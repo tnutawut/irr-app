@@ -8,7 +8,7 @@
   const API = (CFG.apiUrl || DEFAULT_API).trim();
   const STORE_KEY = "irr-data-v1";
   const TAX_CAP = 100000;       // เบี้ยประกันชีวิตลดหย่อนภาษีได้สูงสุด 100,000 บาท/ปี
-  const SPLASH_MIN = 2900;      // ความยาวอนิเมชันโลโก้ (มิลลิวินาที)
+  const SPLASH_MIN = 3150;      // ความยาวอนิเมชันโลโก้ (มิลลิวินาที)
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const $ = (id) => document.getElementById(id);
@@ -250,6 +250,24 @@
   el.form.addEventListener("submit", (e) => { e.preventDefault(); if (!el.calc.disabled) render(); });
 
   /* ─── เริ่มทำงาน: อนิเมชันโลโก้ + โหลดข้อมูลไปพร้อมกัน ─── */
+  // จุดเขียวมะนาวที่ระเบิดกระจายออกตอนท้ายอนิเมชันโลโก้
+  (function makeBurst() {
+    const box = $("burst");
+    if (!box || reduceMotion) return;
+    const n = 30, reach = Math.min(window.innerWidth, window.innerHeight);
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
+      const dist = reach * (0.3 + Math.random() * 0.4);
+      const p = document.createElement("span");
+      p.className = "pt" + (i % 4 === 0 ? " hollow" : "");
+      p.style.setProperty("--dx", Math.cos(a) * dist + "px");
+      p.style.setProperty("--dy", Math.sin(a) * dist + "px");
+      p.style.setProperty("--s", (8 + Math.random() * 12).toFixed(1) + "px");
+      p.style.setProperty("--d", (2.05 + Math.random() * 0.2).toFixed(2) + "s");
+      box.appendChild(p);
+    }
+  })();
+
   const splashStart = performance.now();
   let splashDone = false;
   function endSplash() {
