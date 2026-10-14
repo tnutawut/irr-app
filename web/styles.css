@@ -35,6 +35,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
 
 html { -webkit-text-size-adjust: 100%; }
 
@@ -66,7 +67,6 @@ body {
 body.ready .app { opacity: 1; transform: none; }
 
 .top { text-align: center; margin-bottom: 18px; }
-.top-logo { display: block; width: min(64%, 260px); height: auto; margin: 0 auto 8px; }
 .title {
   margin: 0;
   font: 700 clamp(52px, 15vw, 84px)/1 var(--f-display);
@@ -76,15 +76,21 @@ body.ready .app { opacity: 1; transform: none; }
   background-clip: text;
   color: transparent;
 }
-.lead { margin: 8px 0 0; font-size: 18px; color: var(--mute); }
+.lead {
+  margin: 6px 0 0;
+  font: 500 15px/1.4 var(--f-display);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
 .badge {
   display: inline-block;
-  margin: 12px 0 0;
-  padding: 4px 14px;
+  margin: 14px 0 0;
+  padding: 6px 18px;
   border-radius: 999px;
   background: var(--limetint);
   color: var(--lime-ink);
-  font: 500 13px/1.6 var(--f-display);
+  font: 500 15px/1.6 var(--f-display);
   max-width: 100%;
   text-wrap: balance;
 }
@@ -288,7 +294,9 @@ body.ready .app { opacity: 1; transform: none; }
 .result.show > *:nth-child(n+7) { animation-delay: .46s; }
 @keyframes res-item { from { opacity: 0; transform: translateY(12px); } }
 
-.foot { margin-top: 22px; text-align: center; font-size: 12px; line-height: 1.6; color: var(--mute); }
+.foot { margin-top: 28px; text-align: center; font-size: 12px; line-height: 1.6; color: var(--mute); }
+.foot-logo { display: block; width: min(52%, 200px); height: auto; margin: 0 auto 10px; }
+.foot p { margin: 0; }
 
 /* ═══ อนิเมชันโลโก้ตอนเปิดแอป ═══ */
 .splash {
@@ -365,7 +373,7 @@ body.ready .app { opacity: 1; transform: none; }
   .app { padding-top: calc(env(safe-area-inset-top) + 48px); }
   .form { padding: 30px 32px 32px; gap: 16px; }
   .result { padding: 30px 32px 28px; }
-  .lead { font-size: 20px; }
+  .lead { font-size: 17px; }
 }
 
 /* ─── ผู้ใช้ตั้งค่าลดการเคลื่อนไหว ─── */

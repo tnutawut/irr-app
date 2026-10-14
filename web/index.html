@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="styles.css?v=4">
 </head>
 <body>
   <!-- ════ อนิเมชันโลโก้ตอนเปิดแอป ════ -->
@@ -34,10 +34,9 @@
 
   <main class="app" id="app">
     <header class="top">
-      <img class="top-logo" src="assets/logo/logo-full.png" alt="Nutawut Tamapon" width="1200" height="328">
       <h1 class="title">IRR</h1>
-      <p class="lead">กรุณาระบุข้อมูล</p>
-      <p class="badge" id="mockBadge" hidden>ข้อมูลตัวอย่าง · ยังไม่เชื่อม Google Sheet</p>
+      <p class="lead">Internal Rate of Return</p>
+      <p class="badge">กรุณาระบุข้อมูล เพื่อค้นหาผลตอบแทน</p>
     </header>
 
     <form class="card form" id="form" novalidate>
@@ -77,11 +76,14 @@
 
     <section class="card result" id="result" hidden aria-live="polite"></section>
 
-    <footer class="foot" id="foot"></footer>
+    <footer class="foot">
+      <img class="foot-logo" src="assets/logo/logo-full.png" alt="Nutawut Tamapon" width="1200" height="328">
+      <p id="foot"></p>
+    </footer>
   </main>
 
-  <script src="config.js?v=3"></script>
-  <script src="mock-data.js?v=3"></script>
-  <script src="app.js?v=3"></script>
+  <script src="config.js?v=4"></script>
+  <script src="mock-data.js?v=4"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>

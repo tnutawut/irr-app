@@ -15,7 +15,7 @@
   const el = {
     splash: $("splash"), splashLoad: $("splashLoad"), form: $("form"),
     product: $("product"), gender: $("gender"), age: $("age"), premium: $("premium"), tax: $("tax"),
-    calc: $("calc"), result: $("result"), err: $("loadErr"), badge: $("mockBadge"), foot: $("foot"),
+    calc: $("calc"), result: $("result"), err: $("loadErr"), foot: $("foot"),
   };
 
   let rows = [];
@@ -53,16 +53,28 @@
   function store(payload) {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(payload)); } catch (e) { /* เต็ม/โหมดส่วนตัว */ }
   }
-  async function fetchRemote(nocache) {
+  async function fetchOnce(nocache) {
     const url = API + (API.includes("?") ? "&" : "?") + (nocache ? "nocache=1&" : "") + "t=" + Date.now();
-    const res = await fetch(url, { redirect: "follow" });
-    if (!res.ok) throw new Error("เซิร์ฟเวอร์ตอบกลับ " + res.status);
-    return res.json();
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 25000);
+    try {
+      const res = await fetch(url, { redirect: "follow", signal: ctrl.signal });
+      if (!res.ok) throw new Error("เซิร์ฟเวอร์ตอบกลับ " + res.status);
+      const data = await res.json();
+      if (!data || data.ok === false) throw new Error((data && data.error) || "ข้อมูลไม่ถูกต้อง");
+      return data;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+  // ลองใหม่อีกครั้งอัตโนมัติถ้าครั้งแรกไม่สำเร็จ (เน็ตมือถือสะดุด / Apps Script ตื่นช้า)
+  async function fetchRemote(nocache) {
+    try { return await fetchOnce(nocache); }
+    catch (e) { await new Promise((r) => setTimeout(r, 1200)); return fetchOnce(true); }
   }
 
   async function load() {
     if (!API) {
-      el.badge.hidden = false;
       return window.IRR_MOCK;
     }
     const cached = readStored();
@@ -215,7 +227,7 @@
     fillProducts(keep);
     if (keep && !el.result.hidden) { if (findRow()) render(); else clearResult(); }
     const d = payload.updated ? new Date(payload.updated) : null;
-    el.foot.textContent = "ข้อมูลอัปเดต " + (d && !isNaN(d) ? d.toLocaleString("th-TH", { dateStyle: "medium", timeStyle: "short" }) : "-") +
+    el.foot.textContent = (API ? "" : "ข้อมูลตัวอย่าง · ") + "ข้อมูลอัปเดต " + (d && !isNaN(d) ? d.toLocaleString("th-TH", { dateStyle: "medium", timeStyle: "short" }) : "-") +
       " · ผลตอบแทนเป็นการประมาณการเพื่อประกอบการพิจารณาเท่านั้น";
   }
 
