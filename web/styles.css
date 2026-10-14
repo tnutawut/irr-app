@@ -84,13 +84,12 @@ body {
 }
 body.ready .app { opacity: 1; transform: none; }
 
-/* ─── หัวแอป: แผงสีน้ำเงินเต็มความกว้างจอ + เส้นกราฟผลตอบแทน ─── */
+/* ─── หัวแอป + เส้นกราฟผลตอบแทนวิ่งขึ้นทางขวา ─── */
 .top {
   position: relative;
   isolation: isolate;
   text-align: center;
-  padding: 6px 0 72px;
-  margin-bottom: -50px;     /* การ์ดฟอร์มลอยทับขอบล่างของแผง */
+  margin-bottom: 18px;
 }
 .top-bg {
   position: absolute;
@@ -99,19 +98,15 @@ body.ready .app { opacity: 1; transform: none; }
   width: 100vw;
   transform: translateX(-50%);
   top: calc(-1 * (env(safe-area-inset-top) + var(--app-pad)));
-  bottom: 0;
+  bottom: -40px;
   overflow: hidden;
-  border-radius: 0 0 var(--r-xl) var(--r-xl);
-  background:
-    radial-gradient(70% 90% at 85% 0%, rgba(0, 174, 239, .55) 0%, transparent 70%),
-    linear-gradient(160deg, var(--blue) 0%, var(--blue-2) 70%, var(--deep) 100%);
+  pointer-events: none;
 }
 .top-art { position: absolute; inset: 0; width: 100%; height: 100%; }
-.top-art .grid path { stroke: var(--white); stroke-width: 1; opacity: .07; vector-effect: non-scaling-stroke; }
 .top-art .ln { fill: none; stroke-linecap: round; vector-effect: non-scaling-stroke; }
-.top-art .ln1 { stroke: var(--lime); stroke-width: 2.4; opacity: .9; }
-.top-art .ln2 { stroke: var(--sky); stroke-width: 1.8; opacity: .8; }
-.top-art .ln3 { stroke: var(--white); stroke-width: 1.4; opacity: .35; }
+.top-art .ln1 { stroke: var(--lime); stroke-width: 2.4; opacity: .85; }
+.top-art .ln2 { stroke: var(--sky); stroke-width: 1.8; opacity: .45; }
+.top-art .ln3 { stroke: var(--blue); stroke-width: 1.4; opacity: .15; }
 .top-art .dots path { stroke: var(--lime); stroke-width: 8; stroke-linecap: round; vector-effect: non-scaling-stroke; }
 /* เส้นกราฟค่อยๆ เผยจากซ้ายไปขวาครั้งเดียวหลังอนิเมชันโลโก้ (ไม่วนซ้ำ) */
 .top-art { clip-path: inset(0 100% 0 0); }
@@ -128,23 +123,25 @@ body.ready .top-art .dots path:nth-child(3) { animation-delay: 1.6s; }
   margin: 0;
   font: 700 clamp(52px, 15vw, 84px)/1 var(--f-display);
   letter-spacing: .04em;
-  color: var(--white);
-  text-shadow: 0 6px 24px rgba(0, 52, 106, .35);
+  background: linear-gradient(120deg, var(--blue) 10%, var(--sky) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 .lead {
   margin: 6px 0 0;
   font: 500 15px/1.4 var(--f-display);
   letter-spacing: .14em;
   text-transform: uppercase;
-  color: var(--tint2);
+  color: var(--blue);
 }
 .badge {
   display: inline-block;
   margin: 14px 0 0;
   padding: 6px 18px;
   border-radius: 999px;
-  background: var(--lime);
-  color: var(--lime-ink-d);
+  background: var(--limetint);
+  color: var(--lime-ink);
   font: 500 15px/1.6 var(--f-display);
   max-width: 100%;
   text-wrap: balance;
