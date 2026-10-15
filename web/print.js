@@ -98,7 +98,6 @@
     const net = ys.reduce((a, y) => a + y.v, 0);
     const paid = (Number(row.premium) || 0) * (Number(row.payment) || 0);
     const received = net + paid;
-    const gainPct = paid ? (net / paid) * 100 : 0;
     const taxYear = taxRate > 0 ? Math.min(row.premium, TAX_CAP) * taxRate / 100 : 0;
     const taxTotal = taxYear * (Number(row.payment) || 0);
     const sumOf = (arr) => (arr || []).reduce((a, v) => a + (v == null ? 0 : v), 0);
@@ -138,7 +137,7 @@
     <div><div class="l">เบี้ยประกันปีละ</div><div class="v neg">${num(row.premium)}</div><div class="n">รวม ${row.payment} ปี ${num(paid)} บาท</div></div>
     <div class="arrow" aria-hidden="true"><svg viewBox="0 0 40 20"><path d="M2 10h32M26 3l8 7-8 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <div><div class="l">รับคืนรวม</div><div class="v pos">${num(received)}</div><div class="n">${row.dividend ? "ไม่รวมเงินปันผล" : "ตลอดสัญญา"}</div></div>
-    <div class="gain">ผลประโยชน์มากกว่าเบี้ยประกัน ${signed(net)} บาท <span>(${gainPct >= 0 ? "+" : ""}${gainPct.toFixed(1)}%)</span></div>
+    <div class="gain">ผลประโยชน์มากกว่าเบี้ยประกัน ${num(net)} บาท</div>
   </div>
   <div class="ps-side">
     ${taxRate > 0 ? `<div class="l">ประหยัดภาษีรวม</div><div class="v">${num(taxTotal)}<small> บาท</small></div><div class="n">ปีละ ${num(taxYear)} บาท × ${row.payment} ปี</div>` : ""}
