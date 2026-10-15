@@ -42,9 +42,28 @@ const FIELDS = [
   { key: 'extra',     header: 'extra',         col: 'EC', type: 'text' },
 ];
 
-/** หน้าเว็บเรียก URL นี้ (GET) ได้ JSON กลับไป — ใส่ ?nocache=1 เพื่อบังคับอ่าน Sheet ใหม่ */
+/**
+ * กระแสเงินสดรายปี (ดึงเฉพาะแถวที่เลือกตอนกดพิมพ์ ไม่ส่งทุกแถวตอนเปิดแอป)
+ * IRR ไม่มีปันผล = T–AS · ปันผลสถานการณ์ 1 = AU–BT · 2 = BV–CU · 3 = CW–DV
+ */
+const CASHFLOW_SETS = [['base', 'T'], ['div1', 'AU'], ['div2', 'BV'], ['div3', 'CW']];
+const CASHFLOW_YEARS = 26;
+
+/** คอลัมน์ตรวจสอบ: แถวที่คอลัมน์ EE = Yes เท่านั้นที่นำไปใช้ในแอป (No หรือว่าง = ไม่ใช้) */
+const USE_COLUMN = 'EE';
+
+/**
+ * หน้าเว็บเรียก URL นี้ (GET) ได้ JSON กลับไป — ใส่ ?nocache=1 เพื่อบังคับอ่าน Sheet ใหม่
+ * ?row=<เลขแถว>&code=<product_code> = กระแสเงินสดของแถวนั้น
+ */
 function doGet(e) {
   const params = (e && e.parameter) || {};
+  if (params.row) {
+    let out;
+    try { out = cashflow_(Number(params.row), params.code || ''); }
+    catch (err) { out = { ok: false, error: String(err && err.message || err) }; }
+    return ContentService.createTextOutput(JSON.stringify(out)).setMimeType(ContentService.MimeType.JSON);
+  }
   let json = params.nocache ? null : readCache_();
   if (!json) {
     try {
@@ -65,6 +84,7 @@ function onEdit() {
 /** กด Run ฟังก์ชันนี้ในหน้า Apps Script เพื่อตรวจข้อมูลก่อน Deploy */
 function testPayload() {
   const p = buildPayload_();
+  if (p.rows.length) Logger.log('กระแสเงินสดแถวแรก: ' + JSON.stringify(cashflow_(p.rows[0][15], p.rows[0][0])));
   Logger.log('จำนวนแถวข้อมูล: ' + p.rows.length);
   Logger.log('คอลัมน์ที่ใช้: ' + JSON.stringify(p.columnsUsed));
   Logger.log('แถวแรก: ' + JSON.stringify(p.rows[0]));
@@ -115,11 +135,16 @@ function buildPayload_() {
     data[f.key] = f.type === 'text' ? range.getDisplayValues() : range.getValues();
   });
 
+  const useCol = letterToColumn_(USE_COLUMN);
+  const use = useCol <= lastCol ? sh.getRange(2, useCol, n, 1).getDisplayValues() : [];
+  let skipped = 0;
+
   const rows = [];
   for (let i = 0; i < n; i++) {
     const get = function (k) { return data[k] ? data[k][i][0] : ''; };
     const code = String(get('code')).trim();
     if (!code) continue;
+    if (!/^yes$/i.test(String(use[i] ? use[i][0] : '').trim())) { skipped++; continue; }
     const row = [
       code,
       String(get('name')).trim(),
@@ -136,22 +161,42 @@ function buildPayload_() {
       rate_(get('irrMid')),
       rate_(get('irrHigh')),
       String(get('extra')).trim(),
+      i + 2,                      // เลขแถวใน Sheet (ใช้ดึงกระแสเงินสดตอนพิมพ์)
     ];
     if (row[4] === null) warnings.push('แถว ' + (i + 2) + ': เบี้ยประกัน (premium) ไม่ใช่ตัวเลข');
     if (row[10] === null) warnings.push('แถว ' + (i + 2) + ': IRR ว่างหรือไม่ใช่ตัวเลข');
     rows.push(row);
   }
 
+  if (skipped) warnings.unshift('ข้ามแถวที่คอลัมน์ ' + USE_COLUMN + ' ไม่ใช่ Yes จำนวน ' + skipped + ' แถว');
+
   return {
     ok: true,
     updated: new Date().toISOString(),
     // ลำดับข้อมูลในแต่ละแถวของ rows
     fields: ['code', 'name', 'gender', 'age', 'premium', 'dividend', 'divLow', 'divMid', 'divHigh',
-             'payment', 'irr', 'irrLow', 'irrMid', 'irrHigh', 'extra'],
+             'payment', 'irr', 'irrLow', 'irrMid', 'irrHigh', 'extra', 'row'],
     rows: rows,
     columnsUsed: columnsUsed,
     warnings: warnings.slice(0, 50),
   };
+}
+
+function cashflow_(row, code) {
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+  if (!sh) throw new Error('ไม่พบแท็บชื่อ "' + SHEET_NAME + '"');
+  if (!(row >= 2) || row > sh.getLastRow()) throw new Error('ไม่พบแถวที่ ' + row);
+  // กันกรณี Sheet ถูกแก้ระหว่างใช้งาน แถวเลื่อนไปเป็นแบบอื่น
+  const actual = String(sh.getRange(row, 1).getDisplayValue()).trim();
+  if (code && actual !== code) throw new Error('ข้อมูลใน Sheet เปลี่ยนแล้ว กรุณาเปิดแอปใหม่');
+  const out = { ok: true, row: row, code: actual };
+  CASHFLOW_SETS.forEach(function (set) {
+    const col = letterToColumn_(set[1]);
+    // ช่องว่าง = ไม่มีข้อมูลปีนั้น (null) หน้าเว็บจะแสดงเฉพาะช่องที่มีตัวเลข
+    out[set[0]] = sh.getRange(row, col, 1, CASHFLOW_YEARS).getValues()[0].map(num_);
+    if (set[0] === 'base') out.headers = sh.getRange(1, col, 1, CASHFLOW_YEARS).getDisplayValues()[0];
+  });
+  return out;
 }
 
 /** ตัวเลขทั่วไป: รับทั้งตัวเลขจริงและข้อความอย่าง "1,000,000" */

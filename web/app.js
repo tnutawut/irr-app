@@ -15,7 +15,7 @@
   const el = {
     splash: $("splash"), splashLoad: $("splashLoad"), form: $("form"),
     product: $("product"), gender: $("gender"), age: $("age"), premium: $("premium"), tax: $("tax"),
-    calc: $("calc"), result: $("result"), err: $("loadErr"), foot: $("foot"),
+    calc: $("calc"), result: $("result"), printCta: $("printCta"), printBtn: $("printBtn"), printMsg: $("printMsg"), err: $("loadErr"), foot: $("foot"),
   };
 
   let rows = [];
@@ -159,7 +159,7 @@
     [el.product, el.gender, el.age, el.premium, el.tax].forEach(markFilled);
     el.calc.disabled = !(el.product.value && el.gender.value && el.age.value && el.premium.value && el.tax.value !== "");
   }
-  function clearResult() { el.result.hidden = true; el.result.classList.remove("show"); }
+  function clearResult() { el.result.hidden = true; el.result.classList.remove("show"); el.printCta.hidden = true; }
 
   /* ─── คำนวณ/แสดงผล ─── */
   function findRow() {
@@ -219,6 +219,8 @@
     el.result.classList.remove("show");
     void el.result.offsetWidth; // เล่นอนิเมชันใหม่ทุกครั้งที่กด
     el.result.classList.add("show");
+    el.printCta.hidden = false;
+    el.printMsg.hidden = true;
     requestAnimationFrame(() => el.result.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" }));
   }
 
@@ -247,6 +249,27 @@
   el.age.addEventListener("change", () => { clearResult(); onAge(); });
   el.premium.addEventListener("change", () => { clearResult(); update(); });
   el.tax.addEventListener("change", () => { update(); if (!el.result.hidden) render(); });
+  el.printBtn.addEventListener("click", async () => {
+    const row = findRow();
+    if (!row) return;
+    el.printMsg.hidden = true;
+    if (!API || row.row == null) {
+      el.printMsg.textContent = "ยังพิมพ์ไม่ได้: กรุณาอัปเดต Apps Script เป็นเวอร์ชันล่าสุดก่อน";
+      el.printMsg.hidden = false;
+      return;
+    }
+    el.printBtn.disabled = true;
+    el.printBtn.firstChild.textContent = "กำลังเตรียมเอกสาร…";
+    try {
+      await window.IRRPrint.open({ api: API, row, taxRate: Number(el.tax.value) });
+    } catch (e) {
+      el.printMsg.textContent = "เตรียมเอกสารไม่สำเร็จ: " + (e.message || e);
+      el.printMsg.hidden = false;
+    } finally {
+      el.printBtn.disabled = false;
+      el.printBtn.firstChild.textContent = "พิมพ์สรุป A4 / บันทึก PDF";
+    }
+  });
   el.form.addEventListener("submit", (e) => { e.preventDefault(); if (!el.calc.disabled) render(); });
 
   /* ─── เริ่มทำงาน: อนิเมชันโลโก้ + โหลดข้อมูลไปพร้อมกัน ─── */
