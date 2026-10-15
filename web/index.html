@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=11">
+  <link rel="stylesheet" href="styles.css?v=12">
 </head>
 <body>
   <!-- ════ อนิเมชันโลโก้ตอนเปิดแอป ════ -->
@@ -88,11 +88,12 @@
       <p class="err" id="loadErr" hidden></p>
     </form>
 
-    <section class="card result" id="result" hidden aria-live="polite"></section>
-
-    <section class="print-cta" id="printCta" hidden>
-      <button class="btn btn--ghost" id="printBtn" type="button"><span>One Page · พิมพ์ / บันทึก PDF</span></button>
-      <p class="print-msg" id="printMsg" hidden></p>
+    <section class="card result" id="result" hidden aria-live="polite">
+      <div class="res-body" id="resultBody"></div>
+      <div class="print-cta">
+        <button class="btn btn--ghost" id="printBtn" type="button"><span>พิมพ์ข้อมูล / บันทึก PDF</span></button>
+        <p class="print-msg" id="printMsg" hidden></p>
+      </div>
     </section>
 
     <footer class="foot">
@@ -111,9 +112,9 @@
     <div class="ps-fit"><article class="ps" id="psSheet"></article></div>
   </div>
 
-  <script src="config.js?v=11"></script>
-  <script src="mock-data.js?v=11"></script>
-  <script src="print.js?v=11"></script>
-  <script src="app.js?v=11"></script>
+  <script src="config.js?v=12"></script>
+  <script src="mock-data.js?v=12"></script>
+  <script src="print.js?v=12"></script>
+  <script src="app.js?v=12"></script>
 </body>
 </html>

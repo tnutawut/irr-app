@@ -367,13 +367,13 @@ body.ready .top-art .dots path:nth-child(3) { animation-delay: 1.6s; }
   white-space: pre-line;
 }
 .res-note + .res-extra { margin-top: 0; }
-.result.show > * { animation: res-item .7s var(--ease-out) both; }
-.result.show > *:nth-child(2) { animation-delay: .08s; }
-.result.show > *:nth-child(3) { animation-delay: .14s; }
-.result.show > *:nth-child(4) { animation-delay: .22s; }
-.result.show > *:nth-child(5) { animation-delay: .3s; }
-.result.show > *:nth-child(6) { animation-delay: .38s; }
-.result.show > *:nth-child(n+7) { animation-delay: .46s; }
+.result.show .res-body > * { animation: res-item .7s var(--ease-out) both; }
+.result.show .res-body > *:nth-child(2) { animation-delay: .08s; }
+.result.show .res-body > *:nth-child(3) { animation-delay: .14s; }
+.result.show .res-body > *:nth-child(4) { animation-delay: .22s; }
+.result.show .res-body > *:nth-child(5) { animation-delay: .3s; }
+.result.show .res-body > *:nth-child(6) { animation-delay: .38s; }
+.result.show .res-body > *:nth-child(n+7) { animation-delay: .46s; }
 @keyframes res-item { from { opacity: 0; transform: translateY(12px); } }
 
 .foot { margin-top: 28px; text-align: center; font-size: 12px; line-height: 1.6; color: var(--mute); }
@@ -381,7 +381,8 @@ body.ready .top-art .dots path:nth-child(3) { animation-delay: 1.6s; }
 .foot p { margin: 0; }
 
 /* ═══ ปุ่มพิมพ์ (ต่อจากผล IRR) ═══ */
-.print-cta { margin-top: 14px; display: grid; gap: 8px; }
+.print-cta { margin-top: 18px; display: grid; gap: 8px; }
+.result.show .print-cta { animation: res-item .7s var(--ease-out) .5s both; }
 .btn--ghost {
   background: var(--white);
   color: var(--blue);

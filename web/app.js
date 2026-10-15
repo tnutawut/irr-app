@@ -15,7 +15,7 @@
   const el = {
     splash: $("splash"), splashLoad: $("splashLoad"), form: $("form"),
     product: $("product"), gender: $("gender"), age: $("age"), premium: $("premium"), tax: $("tax"),
-    calc: $("calc"), result: $("result"), printCta: $("printCta"), printBtn: $("printBtn"), printMsg: $("printMsg"), err: $("loadErr"), foot: $("foot"),
+    calc: $("calc"), result: $("result"), resultBody: $("resultBody"), printBtn: $("printBtn"), printMsg: $("printMsg"), err: $("loadErr"), foot: $("foot"),
   };
 
   let rows = [];
@@ -159,7 +159,7 @@
     [el.product, el.gender, el.age, el.premium, el.tax].forEach(markFilled);
     el.calc.disabled = !(el.product.value && el.gender.value && el.age.value && el.premium.value && el.tax.value !== "");
   }
-  function clearResult() { el.result.hidden = true; el.result.classList.remove("show"); el.printCta.hidden = true; }
+  function clearResult() { el.result.hidden = true; el.result.classList.remove("show"); }
 
   /* ─── คำนวณ/แสดงผล ─── */
   function findRow() {
@@ -219,12 +219,11 @@
 
     if (row.extra) parts.push('<p class="res-extra">' + esc(row.extra) + "</p>");
 
-    el.result.innerHTML = parts.join("");
+    el.resultBody.innerHTML = parts.join("");
     el.result.hidden = false;
     el.result.classList.remove("show");
     void el.result.offsetWidth; // เล่นอนิเมชันใหม่ทุกครั้งที่กด
     el.result.classList.add("show");
-    el.printCta.hidden = false;
     el.printMsg.hidden = true;
     requestAnimationFrame(() => el.result.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" }));
   }
@@ -272,7 +271,7 @@
       el.printMsg.hidden = false;
     } finally {
       el.printBtn.disabled = false;
-      el.printBtn.firstChild.textContent = "One Page · พิมพ์ / บันทึก PDF";
+      el.printBtn.firstChild.textContent = "พิมพ์ข้อมูล / บันทึก PDF";
     }
   });
   el.form.addEventListener("submit", (e) => { e.preventDefault(); if (!el.calc.disabled) render(); });
