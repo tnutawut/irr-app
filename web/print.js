@@ -188,10 +188,6 @@
   <div class="ps-tbs${ys.length > 18 ? " dense" : ""}">${tbl(ys.slice(0, half), 0)}${tbl(ys.slice(half), half)}</div>
 </section>`;
 
-    if (taxRate > 0) {
-      h += `<div class="ps-tax">ใช้สิทธิ์ลดหย่อนภาษีได้ประโยชน์ ประหยัดภาษีปีละ <b>${num(taxYear)}</b> บาท ในปีที่ชำระเบี้ยประกัน รวมประโยชน์ทางภาษีตลอดสัญญา <b>${num(taxTotal)}</b> บาท</div>`;
-    }
-
     const perks = [row.extra1, row.extra2].filter((t) => t);
     if (perks.length) h += `<div class="ps-perk">${perks.map((t) => `<p>${esc(t)}</p>`).join("")}</div>`;
 

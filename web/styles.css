@@ -553,8 +553,6 @@ body.ps-open { overflow: hidden; }
 .ps-ch p b.pos { color: #00994F; }
 .ps-tbs.dense .ps-tb td { padding: 1px 6px; font-size: 10px; line-height: 1.4; }
 
-.ps-tax { margin-top: 9px; padding: 9px 16px; border-radius: var(--r-sm); background: var(--limetint); color: var(--lime-ink-d); font-size: 10.5px; line-height: 1.6; }
-.ps-tax b { font-family: var(--f-display); font-weight: 600; color: var(--deep); }
 
 .ps-perk { margin-top: 8px; padding: 8px 16px; border-radius: var(--r-sm); background: var(--white); border: 1px solid var(--line); }
 .ps-perk p { position: relative; margin: 0; padding-left: 13px; font-size: 10.5px; line-height: 1.6; white-space: pre-line; }
