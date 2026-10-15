@@ -112,7 +112,6 @@
       genderTh(row.gender), "อายุ " + ageTxt(row.age) + " ปี", "เบี้ย " + num(row.premium) + " บาท/ปี",
       "ชำระเบี้ย " + row.payment + " ปี", "ฐานภาษี " + taxRate + "%",
     ];
-    const hiReceived = row.dividend ? sumOf(cf.div3) + paid : 0;
 
     let h = `
 <svg class="ps-deco" viewBox="0 0 794 1123" preserveAspectRatio="none" aria-hidden="true">
@@ -123,7 +122,7 @@
   <div>
     <div class="ps-eb">One Page · สรุปผลประโยชน์</div>
     <h1>${esc(row.name || row.code)}</h1>
-    <p class="ps-tag">ชำระเบี้ยประกัน <b>${row.payment} ปี</b> ครบกำหนดรับเงินคืน<b class="g">ปีที่ ${esc(last.label)}</b>${row.dividend ? " และโอกาสรับเงินปันผล" : ""}</p>
+    <p class="ps-tag">ชำระเบี้ยประกัน <b>${row.payment} ปี</b> ครบกำหนดรับเงินคืน <b>ปีที่ ${esc(last.label)}</b>${row.dividend ? " และโอกาสรับเงินปันผล" : ""}</p>
     <div class="ps-chips">${chips.map((c) => `<span>${esc(c)}</span>`).join("")}</div>
   </div>
   <img src="assets/logo/logo-full.png" alt="Nutawut Tamapon" class="ps-logo">
@@ -131,9 +130,9 @@
 
 <section class="ps-hero">
   <div class="ps-irr">
-    <div class="l">ผลตอบแทน IRR${row.dividend ? " (ไม่รวมปันผล)" : ""}</div>
+    <div class="l"><span class="irr-t">IRR</span>${row.dividend ? " (ไม่รวมเงินปันผล)" : ""}</div>
     <div class="v">${(row.irr * 100).toFixed(2)}<small>%</small></div>
-    <div class="n">${row.dividend && row.irrHigh != null ? `สูงสุด <b>${pct(row.irrHigh)}</b> กรณีปันผลสูง` : "ต่อปี ตลอดสัญญา"}</div>
+    <div class="n">เฉลี่ยต่อปีตลอดอายุสัญญา</div>
   </div>
   <div class="ps-flow">
     <div><div class="l">เบี้ยประกันปีละ</div><div class="v neg">${num(row.premium)}</div><div class="n">รวม ${row.payment} ปี ${num(paid)} บาท</div></div>
@@ -142,24 +141,24 @@
     <div class="gain">ผลประโยชน์มากกว่าเบี้ยประกัน ${num(net)} บาท</div>
   </div>
   <div class="ps-side">
-    ${taxRate > 0 ? `<div class="l">ประหยัดภาษีรวม</div><div class="v">${num(taxTotal)}<small> บาท</small></div><div class="n">ปีละ ${num(taxYear)} บาท × ${row.payment} ปี</div>` : ""}
-    ${taxRate > 0 ? "" : `<div class="l">เงินครบกำหนด ปีที่ ${esc(last.label)}</div><div class="v g">${num(last.v)}<small> บาท</small></div>`}
-    ${row.dividend && hiReceived ? `<div class="n hi">กรณีปันผลสูง รับรวม <b>${num(hiReceived)}</b> บาท</div>` : ""}
+    ${taxRate > 0
+      ? `<div class="l">ประหยัดภาษีรวม</div><div class="v">${num(taxTotal)}<small> บาท</small></div><div class="n">ปีละ ${num(taxYear)} บาท × ${row.payment} ปี</div>`
+      : `<p class="taxinfo">เบี้ยประกันชีวิต สามารถใช้หักเป็นค่าใช้จ่าย เพื่อลดหย่อนภาษี สูงสุด <b>300,000 บาท</b> ต่อปี โดยแบ่งเป็น ประกันชีวิตตามเงื่อนไข ส่วนแรก <b>100,000 บาท</b> และ ส่วนประกันบำนาญ <b>200,000 บาท</b></p>`}
   </div>
 </section>
 
 <section class="ps-card">
-  <div class="ps-ch"><h2>เส้นทางเงินของคุณ ปีต่อปี</h2>
+  <div class="ps-ch"><h2>เส้นทางเงินของคุณ</h2>
     <div class="ps-lg"><span><i class="neg"></i>ชำระเบี้ย</span><span><i class="pos"></i>รับเงินคืน</span></div></div>
   ${staircase(ys, row.dividend)}
 </section>`;
 
     if (row.dividend) {
       const sc = [
-        ["ไม่มีเงินปันผล", row.irr, null, cf.base, C.base],
-        ["ปันผลกรณีต่ำ", row.irrLow, row.divLow, cf.div1, C.lo],
-        ["ปันผลกรณีกลาง", row.irrMid, row.divMid, cf.div2, C.mid],
-        ["ปันผลกรณีสูง", row.irrHigh, row.divHigh, cf.div3, C.hi],
+        ["IRR กรณี ไม่มีเงินปันผล", row.irr, null, cf.base, C.base],
+        ["IRR กรณี เงินปันผลต่ำ", row.irrLow, row.divLow, cf.div1, C.lo],
+        ["IRR กรณี เงินปันผลปานกลาง", row.irrMid, row.divMid, cf.div2, C.mid],
+        ["IRR กรณี เงินปันผลสูง", row.irrHigh, row.divHigh, cf.div3, C.hi],
       ];
       const maxIrr = Math.max(...sc.map((x) => x[1] || 0)) || 1;
       h += `
