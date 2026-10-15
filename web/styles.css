@@ -327,16 +327,16 @@ body.ready .top-art .dots path:nth-child(3) { animation-delay: 1.6s; }
   white-space: nowrap;
 }
 .res-note { margin: 10px 0 0; font-size: 12.5px; line-height: 1.6; color: var(--mute); text-align: left; }
+/* ข้อความจากคอลัมน์ extra: รูปแบบเดียวกับหมายเหตุด้านบน ขึ้นบรรทัดใหม่ต่อกัน */
 .res-extra {
-  margin: 16px 0 0;
-  padding: 14px 16px;
-  border-radius: var(--r-sm);
-  border: 1px dashed var(--line);
-  font-size: 14.5px;
-  line-height: 1.75;
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--mute);
   text-align: left;
   white-space: pre-line;
 }
+.res-note + .res-extra { margin-top: 0; }
 .result.show > * { animation: res-item .7s var(--ease-out) both; }
 .result.show > *:nth-child(2) { animation-delay: .08s; }
 .result.show > *:nth-child(3) { animation-delay: .14s; }
