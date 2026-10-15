@@ -9,6 +9,7 @@
   --lime-ink: #4D5C00;
   --lime-ink-d: #1C2A00;
   --logo-green: #00BF63;   /* เขียวในโลโก้ ใช้กับเงินที่ได้รับคืนใน One Page */
+  --print-sky: #58AFE8;    /* สีปุ่มพิมพ์ข้อมูล (ตามภาพที่เจ้าของส่งมา) */
   --ink: #163452;
   --mute: #4F6987;
   --line: #D6E7F4;
@@ -382,6 +383,7 @@ body.ready .top-art .dots path:nth-child(3) { animation-delay: 1.6s; }
 
 /* ═══ ปุ่มพิมพ์ (ต่อจากผล IRR) ═══ */
 .print-cta { margin-top: 18px; display: grid; gap: 8px; }
+.print-cta .btn { background: var(--print-sky); color: var(--white); border: 0; box-shadow: 0 12px 28px -14px rgba(0, 115, 200, .45); }
 .result.show .print-cta { animation: res-item .7s var(--ease-out) .5s both; }
 .btn--ghost {
   background: var(--white);
