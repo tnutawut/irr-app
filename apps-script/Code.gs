@@ -17,7 +17,7 @@
 
 const SHEET_NAME = 'irr1';
 const CACHE_SECONDS = 600;          // เก็บผลไว้ 10 นาที (แก้ข้อมูลใน Sheet แล้วล้างให้อัตโนมัติ)
-const CACHE_PREFIX = 'irr1_v2_';       // เปลี่ยนชื่อเมื่อรูปแบบข้อมูลเปลี่ยน (ไม่ใช้แคชเก่า)
+const CACHE_PREFIX = 'irr1_v3_';       // เปลี่ยนชื่อเมื่อรูปแบบข้อมูลเปลี่ยน (ไม่ใช้แคชเก่า)
 const CACHE_CHUNK = 90000;          // CacheService เก็บได้ไม่เกิน 100KB ต่อช่อง
 
 /**
@@ -40,6 +40,9 @@ const FIELDS = [
   { key: 'irrMid',    header: 'irr_div_mid',   col: 'DZ', type: 'number' },
   { key: 'irrHigh',   header: 'irr_div_high',  col: 'EA', type: 'number' },
   { key: 'extra',     header: 'extra',         col: 'EC', type: 'text' },
+  { key: 'compare',   header: 'compare',       col: 'EF', type: 'text' },   // Yes = ใช้ทำรายงานเปรียบเทียบ
+  { key: 'extra1',    header: 'extra_data_1',  col: 'EG', type: 'text' },   // ผลประโยชน์พิเศษ เรื่องที่ 1
+  { key: 'extra2',    header: 'extra_data_2',  col: 'EH', type: 'text' },   // ผลประโยชน์พิเศษ เรื่องที่ 2
 ];
 
 /**
@@ -162,6 +165,9 @@ function buildPayload_() {
       rate_(get('irrHigh')),
       String(get('extra')).trim(),
       i + 2,                      // เลขแถวใน Sheet (ใช้ดึงกระแสเงินสดตอนพิมพ์)
+      /^yes$/i.test(String(get('compare')).trim()) ? 1 : 0,
+      String(get('extra1')).trim(),
+      String(get('extra2')).trim(),
     ];
     if (row[4] === null) warnings.push('แถว ' + (i + 2) + ': เบี้ยประกัน (premium) ไม่ใช่ตัวเลข');
     if (row[10] === null) warnings.push('แถว ' + (i + 2) + ': IRR ว่างหรือไม่ใช่ตัวเลข');
@@ -175,7 +181,7 @@ function buildPayload_() {
     updated: new Date().toISOString(),
     // ลำดับข้อมูลในแต่ละแถวของ rows
     fields: ['code', 'name', 'gender', 'age', 'premium', 'dividend', 'divLow', 'divMid', 'divHigh',
-             'payment', 'irr', 'irrLow', 'irrMid', 'irrHigh', 'extra', 'row'],
+             'payment', 'irr', 'irrLow', 'irrMid', 'irrHigh', 'extra', 'row', 'compare', 'extra1', 'extra2'],
     rows: rows,
     columnsUsed: columnsUsed,
     warnings: warnings.slice(0, 50),

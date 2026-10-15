@@ -271,7 +271,7 @@ body.ready .top-art .dots path:nth-child(3) { animation-delay: 1.6s; }
 .res-irr.na { font-size: 28px; color: var(--mute); }
 
 .res-tax {
-  margin: 16px 0 0;
+  margin: 12px 0 0;
   padding: 14px 16px;
   border-radius: var(--r-sm);
   background: var(--limetint);
@@ -283,6 +283,35 @@ body.ready .top-art .dots path:nth-child(3) { animation-delay: 1.6s; }
 }
 .res-tax strong, .res-div strong { font: 600 1.08em var(--f-display); color: var(--deep); }
 
+.res-perk {
+  margin: 12px 0 0;
+  padding: 12px 16px;
+  border-radius: var(--r-sm);
+  background: var(--tint);
+  border: 1px solid var(--line);
+  text-align: left;
+}
+.res-perk p {
+  position: relative;
+  margin: 0;
+  padding-left: 16px;
+  font-size: 15px;
+  line-height: 1.75;
+  white-space: pre-line;
+  text-wrap: pretty;
+}
+.res-perk p + p { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--line); }
+.res-perk p::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: .72em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--lime);
+}
+.res-perk p + p::before { top: calc(.72em + 6px); }
 .res-div {
   margin: 16px 0 0;
   padding: 0;
@@ -477,10 +506,15 @@ body.ps-open { overflow: hidden; }
 .ps-tb td.neg { color: var(--blue); }
 .ps-tb td.pos { color: #4F6100; font-weight: 600; }
 .ps-tb tr.be td { background: var(--limetint); }
+.ps-tbs.dense .ps-tb td { padding: 1px 6px; font-size: 10px; line-height: 1.4; }
 
 .ps-tax { margin-top: 9px; padding: 9px 16px; border-radius: var(--r-sm); background: var(--limetint); color: var(--lime-ink-d); font-size: 10.5px; line-height: 1.6; }
 .ps-tax b { font-family: var(--f-display); font-weight: 600; color: var(--deep); }
 
+.ps-perk { margin-top: 8px; padding: 8px 16px; border-radius: var(--r-sm); background: var(--white); border: 1px solid var(--line); }
+.ps-perk p { position: relative; margin: 0; padding-left: 13px; font-size: 10.5px; line-height: 1.6; white-space: pre-line; }
+.ps-perk p + p { margin-top: 3px; }
+.ps-perk p::before { content: ""; position: absolute; left: 1px; top: 6px; width: 6px; height: 6px; border-radius: 50%; background: var(--lime); }
 .ps-ft { position: absolute; left: 42px; right: 42px; bottom: 26px; display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; font-size: 8.5px; line-height: 1.55; color: var(--mute); }
 .ps-ft p { margin: 0; }
 .ps-ft .r { text-align: right; white-space: nowrap; }

@@ -46,7 +46,7 @@
 
   /* ─── กราฟกระแสเงินสดรายปี + เส้นยอดสะสม (แกนเดียวกัน หน่วยบาท) ─── */
   function cashflowChart(ys, tall) {
-    const W = 680, H = tall ? 330 : 240, L = 46, R = 10, T = 14, B = 26;
+    const W = 680, H = tall ? (ys.length > 18 ? 280 : 330) : (ys.length > 18 ? 190 : 240), L = 46, R = 10, T = 14, B = 26;
     let cum = 0;
     const cums = ys.map((y) => (cum += y.v));
     const vals = ys.map((y) => y.v).concat(cums, [0]);
@@ -75,7 +75,7 @@
           : `M${x} ${y0}V${y1 - r}a${r} ${r} 0 0 0 ${r} ${r}h${bw - 2 * r}a${r} ${r} 0 0 0 ${r}-${r}V${y0}Z`;
         s += `<path d="${d}" fill="${yr.v >= 0 ? C.got : C.paid}"/>`;
       }
-      if (ys.length <= 16 || k % 2 === 0 || k === ys.length - 1) {
+      if (ys.length <= 16 || k === ys.length - 1 || (k % 2 === 0 && k !== ys.length - 2)) {
         s += `<text x="${cx(k)}" y="${H - 9}" class="tk" text-anchor="middle">${esc(yr.label)}</text>`;
       }
     });
@@ -174,12 +174,15 @@
     h += `
 <section class="ps-card">
   <div class="ps-ch"><h2>ตารางกระแสเงินสด${row.dividend ? " <span>(กรณีไม่มีเงินปันผล)</span>" : ""}</h2><p>หน่วย: บาท · ติดลบ = จ่ายเบี้ย · บวก = รับคืน</p></div>
-  <div class="ps-tbs">${tbl(ys.slice(0, half), 0)}${tbl(ys.slice(half), half)}</div>
+  <div class="ps-tbs${ys.length > 18 ? " dense" : ""}">${tbl(ys.slice(0, half), 0)}${tbl(ys.slice(half), half)}</div>
 </section>`;
 
     if (taxRate > 0) {
       h += `<div class="ps-tax">ใช้สิทธิ์ลดหย่อนภาษีได้ประโยชน์ ประหยัดภาษีปีละ <b>${num(taxYear)}</b> บาท ในปีที่ชำระเบี้ยประกัน รวมประโยชน์ทางภาษีตลอดสัญญา <b>${num(taxTotal)}</b> บาท</div>`;
     }
+
+    const perks = [row.extra1, row.extra2].filter((t) => t);
+    if (perks.length) h += `<div class="ps-perk">${perks.map((t) => `<p>${esc(t)}</p>`).join("")}</div>`;
 
     const today = new Date().toLocaleDateString("th-TH", { day: "numeric", month: "long", year: "numeric" });
     h += `
