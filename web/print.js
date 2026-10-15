@@ -132,6 +132,7 @@
   <div class="ps-irr">
     <div class="l"><span class="irr-t">IRR</span>${row.dividend ? " (ไม่รวมเงินปันผล)" : ""}</div>
     <div class="v">${(row.irr * 100).toFixed(2)}<small>%</small></div>
+    ${row.dividend && row.irrHigh != null ? `<div class="n hi">สูงสุด <b>${pct(row.irrHigh)}</b> กรณีปันผลสูง</div>` : ""}
     <div class="n">เฉลี่ยต่อปีตลอดอายุสัญญา</div>
   </div>
   <div class="ps-flow">
@@ -178,7 +179,7 @@
 
     // ตารางรายปี แบ่ง 2 ฝั่ง: ลบ = น้ำเงินเข้ม · บวก = เขียว · ยอดสะสม = ดำ · เงินครบกำหนด = เขียวตัวหนา
     const half = Math.ceil(ys.length / 2);
-    const tbl = (part, offset) => `<table class="ps-tb"><thead><tr><th>ปีที่</th><th>กระแสเงินสด</th><th>ยอดสะสม</th></tr></thead><tbody>${
+    const tbl = (part, offset) => `<table class="ps-tb"><colgroup><col class="c-yr"><col class="c-ds"><col class="c-cf"><col class="c-cm"></colgroup><thead><tr><th>ครบปีที่</th><th></th><th>กระแสเงินสด</th><th>ยอดสะสม</th></tr></thead><tbody>${
       part.map((yr, k) => {
         const isLast = offset + k === ys.length - 1;
         const idx = offset + k;
@@ -189,7 +190,7 @@
           : yr.v >= 0 ? back
           : idx === 0 || Math.round(-yr.v) === Math.round(row.premium) ? prem
           : prem + '<i class="dm"> − </i>' + back;
-        return `<tr${isLast ? ' class="mat"' : ""}><td>${yLabel}</td><td class="${yr.v < 0 ? "neg" : "pos"}"><span class="desc">${desc}</span>${money(yr.v, true)}</td><td class="cum">${money(cums[idx])}</td></tr>`;
+        return `<tr${isLast ? ' class="mat"' : ""}><td>${yLabel}</td><td class="desc">${desc}</td><td class="${yr.v < 0 ? "neg" : "pos"}">${money(yr.v, true)}</td><td class="cum">${money(cums[idx])}</td></tr>`;
       }).join("")}</tbody></table>`;
     h += `
 <section class="ps-card">
