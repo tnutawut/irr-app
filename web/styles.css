@@ -569,8 +569,7 @@ body.ps-open { overflow: hidden; }
 .ps-tb td.desc .dp { color: #00994F; }
 .ps-tb td.desc .dm { color: var(--mute); }
 .ps-tb tr.mat td.desc { font-size: 9.5px; }
-.ps-tb tr.matplus td { background: rgba(0, 191, 99, .1); border-bottom: 0; padding-top: 0; }
-.ps-tb tr.matplus td.desc { font: 600 9.5px/1.5 var(--f-display); }
+.ps-tb tr.matplus td { background: none; border-bottom: 0; padding: 2px 5px 0; text-align: right; font: 600 9.5px/1.5 var(--f-display); color: #00994F; }
 .ps-tbs.dense .ps-tb td { padding: 1px 5px; font-size: 10px; line-height: 1.4; }
 .ps-tbs.dense .ps-tb td:first-child { font-size: 9.5px; }
 .ps-tbs.dense .ps-tb td.desc { font-size: 8.5px; padding-left: 2px; }

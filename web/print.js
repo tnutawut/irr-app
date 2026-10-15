@@ -191,12 +191,12 @@
           : idx === 0 || Math.round(-yr.v) === Math.round(row.premium) ? prem
           : prem + '<i class="dm"> − </i>' + back;
         const tr = `<tr${isLast ? ' class="mat"' : ""}><td>${yLabel}</td><td class="desc">${desc}</td><td class="${yr.v < 0 ? "neg" : "pos"}">${money(yr.v, true)}</td><td class="cum">${money(cums[idx])}</td></tr>`;
-        // แบบมีปันผล: บรรทัดต่อจากเงินครบกำหนดทันที = ได้เงินครบกำหนดแล้วยังมีโอกาสรับเงินปันผลอีก
-        return isLast && row.dividend ? tr + '<tr class="matplus"><td></td><td class="desc" colspan="3"><i class="dp">และโอกาสรับเงินปันผล</i></td></tr>' : tr;
+        // แบบมีปันผล: บรรทัดถัดจากเงินครบกำหนด ชิดมุมขวา แยกจากแถวเงินครบกำหนด (ตามที่เจ้าของกำหนด)
+        return isLast && row.dividend ? tr + '<tr class="matplus"><td colspan="4">(และมีโอกาสรับเงินปันผล)</td></tr>' : tr;
       }).join("")}</tbody></table>`;
     h += `
 <section class="ps-card">
-  <div class="ps-ch"><h2>ตารางกระแสเงินสด${row.dividend ? " <span>(กรณีไม่มีเงินปันผล)</span>" : ""}</h2><p>หน่วย : บาท <span class="sep">/</span> ปีที่ ${esc(last.label)} = เงินครบกำหนด</p></div>
+  <div class="ps-ch"><h2>ตารางกระแสเงินสด${row.dividend ? " <span>(ไม่รวมผลประโยชน์เงินปันผล)</span>" : ""}</h2><p>หน่วย : บาท <span class="sep">/</span> ปีที่ ${esc(last.label)} = เงินครบกำหนด</p></div>
   <div class="ps-tbs${ys.length > 18 ? " dense" : ""}">${tbl(ys.slice(0, half), 0)}${tbl(ys.slice(half), half)}</div>
 </section>`;
 
