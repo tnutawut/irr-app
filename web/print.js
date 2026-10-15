@@ -16,6 +16,8 @@
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const num = (n) => Math.round(n).toLocaleString("th-TH");
   const signed = (n) => (n > 0 ? "+" : n < 0 ? "−" : "") + num(Math.abs(n));
+  // ตัวเลขในตาราง: เครื่องหมายอยู่ในช่องกว้างคงที่ ตัวเลขกว้างเท่ากันทุกหลัก หลักจึงตรงกันทุกแถว
+  const money = (n, plus) => `<i class="sg">${n < 0 ? "−" : plus && n > 0 ? "+" : ""}</i>${num(Math.abs(n))}`;
   const pct = (r) => (r == null ? "-" : (r * 100).toFixed(2) + "%");
   const genderTh = (g) => ({ male: "ชาย", m: "ชาย", female: "หญิง", f: "หญิง" }[String(g).toLowerCase()] || g);
   const ageTxt = (a) => String(a).replace(/\s*-\s*/, "–");
@@ -180,11 +182,12 @@
     const tbl = (part, offset) => `<table class="ps-tb"><thead><tr><th>ปีที่</th><th>กระแสเงินสด</th><th>ยอดสะสม</th></tr></thead><tbody>${
       part.map((yr, k) => {
         const isLast = offset + k === ys.length - 1;
-        return `<tr${isLast ? ' class="mat"' : ""}><td>${esc(yr.label)}</td><td class="${yr.v < 0 ? "neg" : "pos"}">${signed(yr.v)}</td><td class="cum">${num(cums[offset + k])}</td></tr>`;
+        const yLabel = yr.label === "0" ? "เริ่มสัญญา" : esc(yr.label);
+        return `<tr${isLast ? ' class="mat"' : ""}><td>${yLabel}</td><td class="${yr.v < 0 ? "neg" : "pos"}">${money(yr.v, true)}</td><td class="cum">${money(cums[offset + k])}</td></tr>`;
       }).join("")}</tbody></table>`;
     h += `
 <section class="ps-card">
-  <div class="ps-ch"><h2>ตารางกระแสเงินสด${row.dividend ? " <span>(กรณีไม่มีเงินปันผล)</span>" : ""}</h2><p>หน่วย: บาท · <b class="neg">−</b> ชำระเบี้ย · <b class="pos">+</b> รับเงินคืน · ปีที่ ${esc(last.label)} = เงินครบกำหนด</p></div>
+  <div class="ps-ch"><h2>ตารางกระแสเงินสด${row.dividend ? " <span>(กรณีไม่มีเงินปันผล)</span>" : ""}</h2><p>หน่วย : บาท <span class="sep">/</span> ปีที่ ${esc(last.label)} = เงินครบกำหนด</p></div>
   <div class="ps-tbs${ys.length > 18 ? " dense" : ""}">${tbl(ys.slice(0, half), 0)}${tbl(ys.slice(half), half)}</div>
 </section>`;
 
