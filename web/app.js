@@ -6,7 +6,7 @@
   const DEFAULT_API = "https://script.google.com/macros/s/AKfycbzO5ONgYvGXy0ZgK89-DXO76-hEG3Cb6IyQfcycAcSquN8jd4BAX72VTx3WNRksQHIJfg/exec";
   const CFG = window.IRR_CONFIG || {};
   const API = (CFG.apiUrl || DEFAULT_API).trim();
-  const STORE_KEY = "irr-data-v1";
+  const STORE_KEY = "irr-data-v2";   // เปลี่ยนเลขเมื่อรูปแบบข้อมูลจาก Apps Script เปลี่ยน
   const TAX_CAP = 100000;       // เบี้ยประกันชีวิตลดหย่อนภาษีได้สูงสุด 100,000 บาท/ปี
   const SPLASH_MIN = 3150;      // ความยาวอนิเมชันโลโก้ (มิลลิวินาที)
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -189,15 +189,6 @@
       ? '<p class="res-irr na">ไม่มีข้อมูล IRR</p>'
       : '<p class="res-irr">' + fmtPct(row.irr) + "<small>%</small></p>");
 
-    if (taxRate > 0) {
-      const perYear = Math.min(premium, TAX_CAP) * taxRate / 100;
-      const years = Number(row.payment) || 0;
-      parts.push(
-        '<p class="res-tax">ใช้สิทธิ์ลดหย่อนภาษีได้ประโยชน์ ประหยัดภาษีปีละ <strong>' + fmtNum(perYear) +
-        "</strong> บาท ในปีที่ชำระเบี้ยประกัน รวมประโยชน์ทางภาษีตลอดสัญญา <strong>" + fmtNum(perYear * years) + "</strong> บาท</p>"
-      );
-    }
-
     if (row.dividend) {
       const sc = [[row.divLow, row.irrLow], [row.divMid, row.irrMid], [row.divHigh, row.irrHigh]];
       parts.push(
@@ -209,8 +200,22 @@
         ).join("") +
         "</ul>"
       );
-      parts.push('<p class="res-note">เงินปันผลเป็นผลประโยชน์ที่ไม่รับรองการจ่าย ขึ้นอยู่กับผลตอบแทนการลงทุนจริงของบริษัท</p>');
     }
+
+    if (taxRate > 0) {
+      const perYear = Math.min(premium, TAX_CAP) * taxRate / 100;
+      const years = Number(row.payment) || 0;
+      parts.push(
+        '<p class="res-tax">ใช้สิทธิ์ลดหย่อนภาษีได้ประโยชน์ ประหยัดภาษีปีละ <strong>' + fmtNum(perYear) +
+        "</strong> บาท ในปีที่ชำระเบี้ยประกัน รวมประโยชน์ทางภาษีตลอดสัญญา <strong>" + fmtNum(perYear * years) + "</strong> บาท</p>"
+      );
+    }
+
+    // ผลประโยชน์พิเศษ (คอลัมน์ EG / EH) อยู่ในกรอบเดียวกัน แยกบรรทัดตามเรื่อง
+    const perks = [row.extra1, row.extra2].filter((t) => t);
+    if (perks.length) parts.push('<div class="res-perk">' + perks.map((t) => "<p>" + esc(t) + "</p>").join("") + "</div>");
+
+    if (row.dividend) parts.push('<p class="res-note">เงินปันผลเป็นผลประโยชน์ที่ไม่รับรองการจ่าย ขึ้นอยู่กับผลตอบแทนการลงทุนจริงของบริษัท</p>');
 
     if (row.extra) parts.push('<p class="res-extra">' + esc(row.extra) + "</p>");
 
@@ -267,7 +272,7 @@
       el.printMsg.hidden = false;
     } finally {
       el.printBtn.disabled = false;
-      el.printBtn.firstChild.textContent = "พิมพ์สรุป A4 / บันทึก PDF";
+      el.printBtn.firstChild.textContent = "One Page · พิมพ์ / บันทึก PDF";
     }
   });
   el.form.addEventListener("submit", (e) => { e.preventDefault(); if (!el.calc.disabled) render(); });

@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=9">
+  <link rel="stylesheet" href="styles.css?v=11">
 </head>
 <body>
   <!-- ════ อนิเมชันโลโก้ตอนเปิดแอป ════ -->
@@ -91,7 +91,7 @@
     <section class="card result" id="result" hidden aria-live="polite"></section>
 
     <section class="print-cta" id="printCta" hidden>
-      <button class="btn btn--ghost" id="printBtn" type="button"><span>พิมพ์สรุป A4 / บันทึก PDF</span></button>
+      <button class="btn btn--ghost" id="printBtn" type="button"><span>One Page · พิมพ์ / บันทึก PDF</span></button>
       <p class="print-msg" id="printMsg" hidden></p>
     </section>
 
@@ -104,15 +104,16 @@
   <!-- ════ หน้าสรุป A4 (ดูตัวอย่างบนจอ + ใช้ตอนพิมพ์) ════ -->
   <div class="ps-overlay" id="psOverlay" hidden>
     <div class="ps-bar">
-      <button class="btn" id="psPrint" type="button"><span>พิมพ์ / บันทึก PDF</span></button>
+      <button class="btn" id="psPdf" type="button"><span>บันทึก PDF</span></button>
+      <button class="ps-close" id="psPrint" type="button">พิมพ์</button>
       <button class="ps-close" id="psClose" type="button">ปิด</button>
     </div>
     <div class="ps-fit"><article class="ps" id="psSheet"></article></div>
   </div>
 
-  <script src="config.js?v=9"></script>
-  <script src="mock-data.js?v=9"></script>
-  <script src="print.js?v=9"></script>
-  <script src="app.js?v=9"></script>
+  <script src="config.js?v=11"></script>
+  <script src="mock-data.js?v=11"></script>
+  <script src="print.js?v=11"></script>
+  <script src="app.js?v=11"></script>
 </body>
 </html>
