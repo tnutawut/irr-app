@@ -181,13 +181,21 @@
     const tbl = (part, offset) => `<table class="ps-tb"><thead><tr><th>ปีที่</th><th>กระแสเงินสด</th><th>ยอดสะสม</th></tr></thead><tbody>${
       part.map((yr, k) => {
         const isLast = offset + k === ys.length - 1;
+        const idx = offset + k;
         const yLabel = yr.label === "0" ? "เริ่มสัญญา" : esc(yr.label);
-        return `<tr${isLast ? ' class="mat"' : ""}><td>${yLabel}</td><td class="${yr.v < 0 ? "neg" : "pos"}">${money(yr.v, true)}</td><td class="cum">${money(cums[offset + k])}</td></tr>`;
+        // คำอธิบายหน้าตัวเลข: เบี้ย (น้ำเงิน) / เงินคืน (เขียว) / เงินครบกำหนด (เขียว)
+        const prem = '<i class="dn">เบี้ยประกัน</i>', back = '<i class="dp">เงินคืนรายปี</i>';
+        const desc = isLast ? '<i class="dp">เงินครบกำหนด</i>'
+          : yr.v >= 0 ? back
+          : idx === 0 || Math.round(-yr.v) === Math.round(row.premium) ? prem
+          : prem + '<i class="dm"> − </i>' + back;
+        return `<tr${isLast ? ' class="mat"' : ""}><td>${yLabel}</td><td class="${yr.v < 0 ? "neg" : "pos"}"><span class="desc">${desc}</span>${money(yr.v, true)}</td><td class="cum">${money(cums[idx])}</td></tr>`;
       }).join("")}</tbody></table>`;
     h += `
 <section class="ps-card">
   <div class="ps-ch"><h2>ตารางกระแสเงินสด${row.dividend ? " <span>(กรณีไม่มีเงินปันผล)</span>" : ""}</h2><p>หน่วย : บาท <span class="sep">/</span> ปีที่ ${esc(last.label)} = เงินครบกำหนด</p></div>
   <div class="ps-tbs${ys.length > 18 ? " dense" : ""}">${tbl(ys.slice(0, half), 0)}${tbl(ys.slice(half), half)}</div>
+  ${row.dividend ? '<p class="ps-tbnote">และโอกาสรับเงินปันผล</p>' : ""}
 </section>`;
 
     const perks = [row.extra1, row.extra2].filter((t) => t);

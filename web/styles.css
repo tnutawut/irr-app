@@ -559,6 +559,13 @@ body.ps-open { overflow: hidden; }
 .ps-tb tr.mat td.pos { color: var(--logo-green); font-size: 12px; }
 .ps-ch p b.neg { color: var(--deep); }
 .ps-ch p b.pos { color: #00994F; }
+.ps-tb td .desc { float: left; font: 500 8.5px/1.9 var(--f-display); letter-spacing: 0; }
+.ps-tb td .desc i { font-style: normal; }
+.ps-tb td .desc .dn { color: var(--deep); }
+.ps-tb td .desc .dp { color: #00994F; }
+.ps-tb td .desc .dm { color: var(--mute); }
+.ps-tb tr.mat td .desc { font-size: 9.5px; line-height: 1.9; }
+.ps-tbnote { margin: 3px 2px 0 0; text-align: right; font: 600 10px/1.4 var(--f-display); color: #00994F; }
 .ps-tbs.dense .ps-tb td { padding: 1px 6px; font-size: 10px; line-height: 1.4; }
 .ps-ch p .sep { margin: 0 4px; color: var(--line); font-weight: 700; }
 
