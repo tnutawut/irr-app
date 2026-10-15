@@ -17,7 +17,7 @@
 
 const SHEET_NAME = 'irr1';
 const CACHE_SECONDS = 600;          // เก็บผลไว้ 10 นาที (แก้ข้อมูลใน Sheet แล้วล้างให้อัตโนมัติ)
-const CACHE_PREFIX = 'irr1_json_';
+const CACHE_PREFIX = 'irr1_v2_';       // เปลี่ยนชื่อเมื่อรูปแบบข้อมูลเปลี่ยน (ไม่ใช้แคชเก่า)
 const CACHE_CHUNK = 90000;          // CacheService เก็บได้ไม่เกิน 100KB ต่อช่อง
 
 /**
