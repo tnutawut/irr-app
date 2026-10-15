@@ -63,7 +63,7 @@
     const d = Math.max(54, Math.min(dividend ? 72 : 88, unit - 12));
     // ป้ายปีอยู่แถบล่าง · ขั้นบันไดสูงขึ้นตามปี · วงกลมเกาะบนยอดขั้น
     const strip = 20;
-    const liftMin = d * 0.5 + 6, liftMax = H - strip - dLast * 0.55 - (dividend ? 18 : 6);
+    const liftMin = d * 0.5 + 6, liftMax = H - strip - dLast * 0.55 - 6;
     const step = n > 1 ? (liftMax - liftMin) / (n - 1) : 0;
 
     let x = 0, html = "";
@@ -72,8 +72,11 @@
       const lift = liftMin + k * step;                          // ความสูงของขั้น
       const size = g.last ? dLast : d;
       const pos = g.v >= 0;
-      const fs = g.last ? Math.min(22, size * 0.17) : Math.min(15, size * 0.19);
-      const yrs = g.n > 1 ? `ปีที่ ${g.from}–${g.to}` : `ปีที่ ${g.from}`;
+      // ขนาดตัวเลขพอดีวงกลม (ตัวเลขยาวจะเล็กลง ไม่ล้นขอบ)
+      const chars = signed(g.v).length;
+      const fs = Math.min(g.last ? 22 : 15, (size * 0.84) / (chars * 0.6));
+      const start = g.from === "0";
+      const yrs = start ? (g.n > 1 ? `เริ่มสัญญา–ปีที่ ${g.to}` : "เริ่มสัญญา") : g.n > 1 ? `ปีที่ ${g.from}–${g.to}` : `ปีที่ ${g.from}`;
       const sub = g.last ? "เงินครบกำหนด" : g.n > 1 ? "ต่อปี" : pos ? "รับคืน" : "ชำระเบี้ย";
       html += `
       <div class="st-col${g.last ? " last" : ""}" style="left:${x}px;width:${w}px">
@@ -82,7 +85,7 @@
         <div class="st-dot ${pos ? "pos" : "neg"}" style="width:${size}px;height:${size}px;bottom:${strip + lift - size * 0.45}px">
           <b style="font-size:${fs}px">${signed(g.v)}</b><i>${sub}</i>
         </div>
-        ${g.last && dividend ? `<div class="st-plus" style="bottom:${strip + lift + size * 0.55 + 4}px">(และโอกาสรับเงินปันผล)</div>` : ""}
+        ${g.last && dividend ? `<div class="st-plus" style="bottom:${strip + lift - size * 0.45 - 20}px">(และโอกาสรับเงินปันผล)</div>` : ""}
       </div>`;
       x += w;
     });
@@ -103,7 +106,6 @@
 
     let cum = 0;
     const cums = ys.map((y) => (cum += y.v));
-    const be = cums.findIndex((c, k) => k > 0 && c >= 0 && cums.slice(0, k).some((p) => p < 0));
 
     const chips = [
       genderTh(row.gender), "อายุ " + ageTxt(row.age) + " ปี", "เบี้ย " + num(row.premium) + " บาท/ปี",
@@ -120,7 +122,7 @@
   <div>
     <div class="ps-eb">One Page · สรุปผลประโยชน์</div>
     <h1>${esc(row.name || row.code)}</h1>
-    <p class="ps-tag">ชำระเบี้ยเพียง <b>${row.payment} ปี</b> รับเงินคืนรวม <b class="g">${num(received)} บาท</b>${row.dividend ? " และโอกาสรับเงินปันผลเพิ่ม" : ""}</p>
+    <p class="ps-tag">ชำระเบี้ยประกัน <b>${row.payment} ปี</b> ครบกำหนดรับเงินคืน<b class="g">ปีที่ ${esc(last.label)}</b>${row.dividend ? " และโอกาสรับเงินปันผล" : ""}</p>
     <div class="ps-chips">${chips.map((c) => `<span>${esc(c)}</span>`).join("")}</div>
   </div>
   <img src="assets/logo/logo-full.png" alt="Nutawut Tamapon" class="ps-logo">
@@ -133,15 +135,15 @@
     <div class="n">${row.dividend && row.irrHigh != null ? `สูงสุด <b>${pct(row.irrHigh)}</b> กรณีปันผลสูง` : "ต่อปี ตลอดสัญญา"}</div>
   </div>
   <div class="ps-flow">
-    <div><div class="l">จ่ายเบี้ยรวม</div><div class="v neg">${num(paid)}</div><div class="n">${num(row.premium)} × ${row.payment} ปี</div></div>
+    <div><div class="l">เบี้ยประกันปีละ</div><div class="v neg">${num(row.premium)}</div><div class="n">รวม ${row.payment} ปี ${num(paid)} บาท</div></div>
     <div class="arrow" aria-hidden="true"><svg viewBox="0 0 40 20"><path d="M2 10h32M26 3l8 7-8 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <div><div class="l">รับคืนรวม</div><div class="v pos">${num(received)}</div><div class="n">${row.dividend ? "ไม่รวมเงินปันผล" : "ตลอดสัญญา"}</div></div>
-    <div class="gain">กำไร ${signed(net)} บาท <span>(${gainPct >= 0 ? "+" : ""}${gainPct.toFixed(1)}% ของเบี้ยรวม)</span></div>
+    <div class="gain">ผลประโยชน์มากกว่าเบี้ยประกัน ${signed(net)} บาท <span>(${gainPct >= 0 ? "+" : ""}${gainPct.toFixed(1)}%)</span></div>
   </div>
   <div class="ps-side">
     ${taxRate > 0 ? `<div class="l">ประหยัดภาษีรวม</div><div class="v">${num(taxTotal)}<small> บาท</small></div><div class="n">ปีละ ${num(taxYear)} บาท × ${row.payment} ปี</div>` : ""}
-    ${be > 0 ? `<div class="be${taxRate > 0 ? " sm" : ""}"><span>คืนทุน</span> ปีที่ ${esc(ys[be].label)}</div>` : ""}
-    ${row.dividend && hiReceived ? `<div class="n">กรณีปันผลสูง รับรวม <b>${num(hiReceived)}</b> บาท</div>` : ""}
+    ${taxRate > 0 ? "" : `<div class="l">เงินครบกำหนด ปีที่ ${esc(last.label)}</div><div class="v g">${num(last.v)}<small> บาท</small></div>`}
+    ${row.dividend && hiReceived ? `<div class="n hi">กรณีปันผลสูง รับรวม <b>${num(hiReceived)}</b> บาท</div>` : ""}
   </div>
 </section>
 
