@@ -156,10 +156,10 @@
 
     if (row.dividend) {
       const sc = [
-        ["IRR กรณี ไม่มีเงินปันผล", row.irr, null, cf.base, C.base],
-        ["IRR กรณี เงินปันผลต่ำ", row.irrLow, row.divLow, cf.div1, C.lo],
-        ["IRR กรณี เงินปันผลปานกลาง", row.irrMid, row.divMid, cf.div2, C.mid],
-        ["IRR กรณี เงินปันผลสูง", row.irrHigh, row.divHigh, cf.div3, C.hi],
+        ["กรณี ไม่มีเงินปันผล", row.irr, null, cf.base, C.base],
+        ["กรณี เงินปันผลต่ำ", row.irrLow, row.divLow, cf.div1, C.lo],
+        ["กรณี เงินปันผลปานกลาง", row.irrMid, row.divMid, cf.div2, C.mid],
+        ["กรณี เงินปันผลสูง", row.irrHigh, row.divHigh, cf.div3, C.hi],
       ];
       const maxIrr = Math.max(...sc.map((x) => x[1] || 0)) || 1;
       h += `
@@ -167,7 +167,7 @@
   <div class="ps-ch"><h2>โอกาสรับผลตอบแทนเพิ่มจากเงินปันผล</h2><p>เงินปันผลเป็นผลประโยชน์ที่ไม่รับรองการจ่าย</p></div>
   <div class="ps-sc">${sc.map(([t, irr, dv, arr, col]) => `
     <div class="ps-s">
-      <div class="t"><i style="background:${col}"></i>${t}</div>
+      <div class="t"><i style="background:${col}"></i><b class="irr-g">IRR</b>${t}</div>
       <div class="v">${pct(irr)}</div>
       <div class="bar"><b style="width:${((irr || 0) / maxIrr) * 100}%;background:${col}"></b></div>
       <div class="n">${dv == null ? "&nbsp;" : "เงินปันผล <b>" + num(dv) + "</b> บาท"}</div>
@@ -190,13 +190,14 @@
           : yr.v >= 0 ? back
           : idx === 0 || Math.round(-yr.v) === Math.round(row.premium) ? prem
           : prem + '<i class="dm"> − </i>' + back;
-        return `<tr${isLast ? ' class="mat"' : ""}><td>${yLabel}</td><td class="desc">${desc}</td><td class="${yr.v < 0 ? "neg" : "pos"}">${money(yr.v, true)}</td><td class="cum">${money(cums[idx])}</td></tr>`;
+        const tr = `<tr${isLast ? ' class="mat"' : ""}><td>${yLabel}</td><td class="desc">${desc}</td><td class="${yr.v < 0 ? "neg" : "pos"}">${money(yr.v, true)}</td><td class="cum">${money(cums[idx])}</td></tr>`;
+        // แบบมีปันผล: บรรทัดต่อจากเงินครบกำหนดทันที = ได้เงินครบกำหนดแล้วยังมีโอกาสรับเงินปันผลอีก
+        return isLast && row.dividend ? tr + '<tr class="matplus"><td></td><td class="desc" colspan="3"><i class="dp">และโอกาสรับเงินปันผล</i></td></tr>' : tr;
       }).join("")}</tbody></table>`;
     h += `
 <section class="ps-card">
   <div class="ps-ch"><h2>ตารางกระแสเงินสด${row.dividend ? " <span>(กรณีไม่มีเงินปันผล)</span>" : ""}</h2><p>หน่วย : บาท <span class="sep">/</span> ปีที่ ${esc(last.label)} = เงินครบกำหนด</p></div>
   <div class="ps-tbs${ys.length > 18 ? " dense" : ""}">${tbl(ys.slice(0, half), 0)}${tbl(ys.slice(half), half)}</div>
-  ${row.dividend ? '<p class="ps-tbnote">และโอกาสรับเงินปันผล</p>' : ""}
 </section>`;
 
     const perks = [row.extra1, row.extra2].filter((t) => t);
