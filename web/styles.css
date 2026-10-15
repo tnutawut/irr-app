@@ -8,6 +8,7 @@
   --lime: #BED62F;
   --lime-ink: #4D5C00;
   --lime-ink-d: #1C2A00;
+  --logo-green: #00BF63;   /* เขียวในโลโก้ ใช้กับเงินที่ได้รับคืนใน One Page */
   --ink: #163452;
   --mute: #4F6987;
   --line: #D6E7F4;
@@ -415,6 +416,7 @@ body.ps-open { overflow: hidden; }
   max-width: 560px;
 }
 .ps-bar .btn { flex: 1; height: 50px; margin: 0; font-size: 17px; }
+.ps-bar .btn:disabled { opacity: .7; }
 .ps-close {
   height: 50px;
   padding: 0 22px;
@@ -458,17 +460,6 @@ body.ps-open { overflow: hidden; }
 .ps-chips span { padding: 1px 11px; border-radius: 999px; background: var(--white); border: 1px solid var(--line); font: 500 10.5px/1.8 var(--f-display); color: var(--deep); }
 .ps-logo { width: 122px; flex: none; }
 
-.ps-kpis { position: relative; display: grid; grid-template-columns: 1fr 1.15fr 1.15fr 1.1fr; gap: 8px; margin-top: 16px; }
-.ps-kpi { background: var(--white); border: 1px solid var(--line); border-radius: var(--r-sm); padding: 10px 13px; box-shadow: 0 16px 34px -24px rgba(0, 52, 106, .3); }
-.ps-kpi .l { font: 500 10px/1.3 var(--f-display); color: var(--mute); }
-.ps-kpi .v { margin-top: 3px; font: 700 21px/1.1 var(--f-display); color: var(--deep); white-space: nowrap; }
-.ps-kpi .v small { font-size: 11px; color: var(--blue); }
-.ps-kpi .n { margin-top: 2px; font-size: 9px; color: var(--mute); }
-.ps-kpi.hl { background: linear-gradient(135deg, var(--blue), var(--blue-2)); border-color: transparent; }
-.ps-kpi.hl .l { color: var(--tint2); }
-.ps-kpi.hl .v { color: var(--white); font-size: 30px; }
-.ps-kpi.hl .v small { color: var(--lime); font-size: 16px; }
-
 .ps-card { position: relative; margin-top: 9px; padding: 12px 16px 10px; background: var(--white); border: 1px solid var(--line); border-radius: var(--r); box-shadow: 0 16px 34px -24px rgba(0, 52, 106, .3); }
 .ps-ch { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 4px; }
 .ps-ch h2 { margin: 0; font: 600 14.5px/1.3 var(--f-display); color: var(--deep); }
@@ -477,16 +468,59 @@ body.ps-open { overflow: hidden; }
 .ps-lg { display: flex; gap: 12px; font-size: 9.5px; color: var(--mute); white-space: nowrap; }
 .ps-lg span { display: inline-flex; align-items: center; gap: 5px; }
 .ps-lg i { width: 10px; height: 10px; border-radius: 3px; }
-.ps-lg i.ln { height: 2px; width: 16px; border-radius: 2px; background: var(--deep); }
+.ps-lg i.neg { background: var(--deep); border-radius: 50%; }
+.ps-lg i.pos { background: var(--logo-green); border-radius: 50%; }
 
-.ps-chart { display: block; width: 100%; height: auto; font-family: var(--f-body); }
-.ps-chart .grid { stroke: #E4EEF6; stroke-width: 1; }
-.ps-chart .zero { stroke: #A9C1D6; stroke-width: 1; }
-.ps-chart .tk { font: 500 9px var(--f-display); fill: var(--mute); }
-.ps-chart .cum { fill: none; stroke: var(--deep); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
-.ps-chart .cumdot { fill: var(--deep); stroke: #fff; stroke-width: 2; }
-.ps-chart .bedot { fill: var(--lime); stroke: var(--deep); stroke-width: 2; }
-.ps-chart .be { font: 600 10px var(--f-display); fill: var(--deep); paint-order: stroke; stroke: #fff; stroke-width: 4px; }
+/* บันไดกระแสเงินสด */
+.st { position: relative; margin-top: 2px; }
+.st-col { position: absolute; bottom: 0; top: 0; }
+.st-step {
+  position: absolute; left: 4px; right: 4px; bottom: 0;
+  border-radius: 14px 14px 6px 6px;
+  background: linear-gradient(180deg, var(--tint2), var(--tint));
+}
+.st-yr { position: absolute; left: 0; right: 0; bottom: 2px; text-align: center; font: 500 10px/1.4 var(--f-display); color: var(--mute); white-space: nowrap; }
+.st-col.last .st-step { background: linear-gradient(180deg, rgba(0, 191, 99, .16), var(--limetint)); }
+.st-col.last .st-yr { color: var(--deep); font-weight: 600; font-size: 11px; }
+.st-dot {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  color: #fff; border: 3px solid #fff; box-shadow: 0 10px 22px -12px rgba(0, 52, 106, .6);
+}
+.st-dot.neg { background: var(--deep); }
+.st-dot.pos { background: var(--logo-green); }
+.st-dot b { font: 700 13px/1.1 var(--f-display); white-space: nowrap; letter-spacing: -.01em; }
+.st-dot i { font: 500 8.5px/1.3 var(--f-display); font-style: normal; opacity: .9; }
+.st-col.last .st-dot { box-shadow: 0 0 0 6px rgba(0, 191, 99, .18), 0 14px 30px -12px rgba(0, 120, 60, .7); }
+.st-col.last .st-dot i { font-size: 10px; }
+.st-plus { position: absolute; left: -30px; right: -6px; text-align: center; font: 600 10px/1.3 var(--f-display); color: #00994F; }
+
+/* ส่วนหัวเชิงขาย */
+.ps-tag { margin: 4px 0 0; font-size: 12.5px; color: var(--ink); }
+.ps-tag b { font-family: var(--f-display); font-weight: 600; color: var(--deep); }
+.ps-tag b.g { color: #00994F; }
+.ps-hero { position: relative; display: grid; grid-template-columns: 1fr 2.05fr 1.15fr; gap: 8px; margin-top: 14px; }
+.ps-hero > div { border-radius: var(--r-sm); padding: 11px 14px; background: var(--white); border: 1px solid var(--line); box-shadow: 0 16px 34px -24px rgba(0, 52, 106, .3); }
+.ps-hero .l { font: 500 10px/1.3 var(--f-display); color: var(--mute); }
+.ps-hero .n { margin-top: 2px; font-size: 9px; line-height: 1.45; color: var(--mute); }
+.ps-hero .n b { font-family: var(--f-display); font-weight: 600; }
+.ps-irr { background: linear-gradient(135deg, var(--blue), var(--blue-2)) !important; border-color: transparent !important; }
+.ps-irr .l, .ps-irr .n { color: var(--tint2); }
+.ps-irr .n b { color: var(--lime); }
+.ps-irr .v { margin-top: 2px; font: 700 34px/1.05 var(--f-display); color: #fff; }
+.ps-irr .v small { font-size: 17px; color: var(--lime); }
+.ps-flow { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; column-gap: 8px; }
+.ps-flow .v { margin-top: 2px; font: 700 21px/1.1 var(--f-display); white-space: nowrap; }
+.ps-flow .v.neg { color: var(--deep); }
+.ps-flow .v.pos { color: #00994F; }
+.ps-flow .arrow { width: 30px; color: var(--logo-green); }
+.ps-flow .gain { grid-column: 1 / -1; margin-top: 7px; padding: 4px 12px; border-radius: 999px; background: rgba(0, 191, 99, .12); color: #007A3F; font: 600 11.5px/1.5 var(--f-display); text-align: center; }
+.ps-flow .gain span { font-weight: 400; font-size: 10px; }
+.ps-side .v { margin-top: 2px; font: 700 20px/1.1 var(--f-display); color: var(--deep); }
+.ps-side .v small { font-size: 11px; color: var(--blue); }
+.ps-side .be { display: inline-block; margin-top: 6px; padding: 2px 10px; border-radius: 999px; background: var(--limetint); color: var(--lime-ink); font: 600 11px/1.6 var(--f-display); }
+.ps-side .be:not(.sm) { margin-top: 2px; font-size: 18px; padding: 4px 14px; }
+.ps-side .be span { font-weight: 400; }
 
 .ps-sc { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 4px; }
 .ps-s { background: var(--tint); border-radius: var(--r-sm); padding: 9px 11px 8px; }
@@ -496,6 +530,7 @@ body.ps-open { overflow: hidden; }
 .ps-s .bar { height: 5px; margin: 4px 0 5px; border-radius: 999px; background: var(--white); overflow: hidden; }
 .ps-s .bar b { display: block; height: 100%; border-radius: 999px; }
 .ps-s .n { font-size: 9px; line-height: 1.5; color: var(--mute); }
+.ps-s .n b { font-family: var(--f-display); font-weight: 600; color: var(--ink); }
 
 .ps-tbs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .ps-tb { width: 100%; border-collapse: collapse; font-family: var(--f-display); font-variant-numeric: tabular-nums; }
@@ -503,9 +538,13 @@ body.ps-open { overflow: hidden; }
 .ps-tb th:first-child, .ps-tb td:first-child { text-align: left; }
 .ps-tb td { padding: 2px 6px; font-size: 10.5px; line-height: 1.5; text-align: right; border-bottom: 1px solid #EEF4F9; }
 .ps-tb td:first-child { color: var(--mute); font-weight: 500; }
-.ps-tb td.neg { color: var(--blue); }
-.ps-tb td.pos { color: #4F6100; font-weight: 600; }
-.ps-tb tr.be td { background: var(--limetint); }
+.ps-tb td.neg { color: var(--deep); }
+.ps-tb td.pos { color: #00994F; font-weight: 600; }
+.ps-tb td.cum { color: #111; }
+.ps-tb tr.mat td { background: rgba(0, 191, 99, .1); font-weight: 700; }
+.ps-tb tr.mat td.pos { color: var(--logo-green); font-size: 12px; }
+.ps-ch p b.neg { color: var(--deep); }
+.ps-ch p b.pos { color: #00994F; }
 .ps-tbs.dense .ps-tb td { padding: 1px 6px; font-size: 10px; line-height: 1.4; }
 
 .ps-tax { margin-top: 9px; padding: 9px 16px; border-radius: var(--r-sm); background: var(--limetint); color: var(--lime-ink-d); font-size: 10.5px; line-height: 1.6; }
@@ -518,6 +557,11 @@ body.ps-open { overflow: hidden; }
 .ps-ft { position: absolute; left: 42px; right: 42px; bottom: 26px; display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; font-size: 8.5px; line-height: 1.55; color: var(--mute); }
 .ps-ft p { margin: 0; }
 .ps-ft .r { text-align: right; white-space: nowrap; }
+
+/* สำเนาที่ใช้สร้างไฟล์ PDF: ตัวสร้าง PDF วาดเงาเบลอผิดเป็นบล็อกสีเทา จึงใช้เส้นขอบแทนเงา */
+.ps--pdf, .ps--pdf * { box-shadow: none !important; }
+.ps--pdf .st-dot { border-color: rgba(255, 255, 255, .95); }
+.ps--pdf .st-col.last .st-dot { border: 6px solid #BFF0D6; }
 
 /* ═══ ตอนสั่งพิมพ์: แสดงเฉพาะหน้า A4 ═══ */
 @page { size: A4 portrait; margin: 0; }

@@ -272,7 +272,7 @@
       el.printMsg.hidden = false;
     } finally {
       el.printBtn.disabled = false;
-      el.printBtn.firstChild.textContent = "พิมพ์สรุป A4 / บันทึก PDF";
+      el.printBtn.firstChild.textContent = "One Page · พิมพ์ / บันทึก PDF";
     }
   });
   el.form.addEventListener("submit", (e) => { e.preventDefault(); if (!el.calc.disabled) render(); });
