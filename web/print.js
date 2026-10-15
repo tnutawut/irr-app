@@ -38,8 +38,9 @@
     const out = [];
     cf.base.forEach((v, i) => {
       if (v == null) return;
-      const h = String((cf.headers && cf.headers[i]) || "").trim();
-      out.push({ i, label: h && h.length <= 8 ? h : String(i), v });
+      // หัวคอลัมน์ใน Sheet เช่น "ปีที่ 3" → แสดงเลข 3 (ไม่มีหัว = ลำดับคอลัมน์)
+      const m = String((cf.headers && cf.headers[i]) || "").match(/\d+/);
+      out.push({ i, label: m ? m[0] : String(i), v });
     });
     return out;
   }
