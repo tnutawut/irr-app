@@ -4,7 +4,8 @@
   "use strict";
 
   const TAX_CAP = 100000;
-  const C = { base: "#00346A", lo: "#A9C222", mid: "#728C0A", hi: "#475800" };
+  // หลอดกราฟ IRR: ไม่มีปันผล = น้ำเงิน · มีปันผล = ไล่สีฟ้า → เขียวสด (แบบ C ที่เจ้าของเลือก)
+  const C = { base: "#0057A8", div: "linear-gradient(90deg, #00AEEF, #00BF63)" };
   const LIB = {
     canvas: "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
     pdf: "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
@@ -157,9 +158,9 @@
     if (row.dividend) {
       const sc = [
         ["กรณี ไม่มีเงินปันผล", row.irr, null, cf.base, C.base],
-        ["กรณี เงินปันผลต่ำ", row.irrLow, row.divLow, cf.div1, C.lo],
-        ["กรณี เงินปันผลปานกลาง", row.irrMid, row.divMid, cf.div2, C.mid],
-        ["กรณี เงินปันผลสูง", row.irrHigh, row.divHigh, cf.div3, C.hi],
+        ["กรณี เงินปันผลต่ำ", row.irrLow, row.divLow, cf.div1, C.div],
+        ["กรณี เงินปันผลปานกลาง", row.irrMid, row.divMid, cf.div2, C.div],
+        ["กรณี เงินปันผลสูง", row.irrHigh, row.divHigh, cf.div3, C.div],
       ];
       const maxIrr = Math.max(...sc.map((x) => x[1] || 0)) || 1;
       h += `
@@ -167,7 +168,7 @@
   <div class="ps-ch"><h2>โอกาสรับผลตอบแทนเพิ่มจากเงินปันผล</h2><p>เงินปันผลเป็นผลประโยชน์ที่ไม่รับรองการจ่าย</p></div>
   <div class="ps-sc">${sc.map(([t, irr, dv, arr, col]) => `
     <div class="ps-s">
-      <div class="t"><i style="background:${col}"></i><b class="irr-g">IRR</b>${t}</div>
+      <div class="t"><b class="irr-g">IRR</b>${t}</div>
       <div class="v">${pct(irr)}</div>
       <div class="bar"><b style="width:${((irr || 0) / maxIrr) * 100}%;background:${col}"></b></div>
       <div class="n">${dv == null ? "&nbsp;" : "เงินปันผล <b>" + num(dv) + "</b> บาท"}</div>
