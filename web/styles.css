@@ -514,6 +514,7 @@ body.ps-open { overflow: hidden; }
 .ps-irr .irr-t { font: 700 17px/1 var(--f-display); color: #fff; letter-spacing: .02em; }
 .ps-irr .n { font-size: 10px; }
 .ps-irr .n.hi { margin-top: 3px; font-size: 10.5px; color: #fff; }
+.ps-side .n.rd { margin-top: 6px; font-size: 8.5px; }
 .ps-hero--taxinfo { grid-template-columns: 1fr 1.78fr 1.42fr; }
 .ps-side .taxinfo { margin: 0; font-size: 9.3px; line-height: 1.6; color: var(--ink); text-wrap: pretty; }
 .ps-side .taxinfo b { font-family: var(--f-display); font-weight: 600; color: var(--deep); white-space: nowrap; }

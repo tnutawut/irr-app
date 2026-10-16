@@ -144,7 +144,7 @@
   </div>
   <div class="ps-side">
     ${taxRate > 0
-      ? `<div class="l">ประหยัดภาษีรวม</div><div class="v">${num(taxTotal)}<small> บาท</small></div><div class="n">ปีละ ${num(taxYear)} บาท × ${row.payment} ปี</div>`
+      ? `<div class="l">ประหยัดภาษีรวม</div><div class="v">${num(taxTotal)}<small> บาท</small></div><div class="n">ปีละ ${num(taxYear)} บาท × ${row.payment} ปี</div><div class="n rd">ทั้งนี้เป็นไปตามเงื่อนไขของกรมสรรพากร</div>`
       : `<p class="taxinfo">เบี้ยประกันชีวิต สามารถใช้หักเป็นค่าใช้จ่าย เพื่อลดหย่อนภาษี เพดานสูงสุด <b>300,000 บาท</b> ต่อปี โดยแบ่งเป็น ประกันชีวิตตามเงื่อนไข ส่วนแรก ไม่เกิน <b>100,000 บาท</b> และ ส่วนของประกันบำนาญ สูงสุด <b>15% ของเงินได้</b> ไม่เกิน <b>200,000 บาท</b> ทั้งนี้เป็นไปตามเงื่อนไขของกรมสรรพากร</p>`}
   </div>
 </section>
