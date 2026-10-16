@@ -59,8 +59,8 @@
     });
 
     const n = groups.length;
-    // compact = มีกรอบความคุ้มครองอุบัติเหตุ (แบบรหัส K) ใต้บันได แบบมีปันผลต้องเตี้ยลงให้พอดี A4
-    const W = 678, H = (dividend ? (ys.length > 18 ? 214 : 236) : 292) - (compact && dividend ? 56 : 0);
+    // compact = มีกรอบความคุ้มครองอุบัติเหตุ (แบบรหัส K) ใต้บันได บันไดต้องเตี้ยลงให้ทั้งหน้าพอดี A4
+    const W = 678, H = (dividend ? (ys.length > 18 ? 214 : 236) : 292) - (compact ? (dividend ? 56 : 40) : 0);
     const weights = groups.map((g) => (g.last ? 1.55 : 1));
     const unit = W / weights.reduce((a, b) => a + b, 0);
     const dLast = Math.min(dividend ? 108 : 132, unit * 1.55 - 10);
@@ -214,7 +214,8 @@
         // คำอธิบายหน้าตัวเลข: เบี้ย (น้ำเงิน) / เงินคืน (เขียว) / เงินครบกำหนด (เขียว)
         const prem = '<i class="dn">เบี้ยประกัน</i>', back = '<i class="dp">เงินคืนรายปี</i>';
         const desc = isLast ? '<i class="dp">เงินครบกำหนด</i>'
-          : yr.v >= 0 ? back
+          : Math.round(yr.v) === 0 ? ""          // ปีที่กระแสเงินสดเป็น 0 ไม่ใส่คำอธิบาย
+          : yr.v > 0 ? back
           : idx === 0 || Math.round(-yr.v) === Math.round(row.premium) ? prem
           : prem + '<i class="dm"> − </i>' + back;
         const tr = `<tr${isLast ? ' class="mat"' : ""}><td>${yLabel}</td><td class="desc">${desc}</td><td class="${yr.v < 0 ? "neg" : "pos"}">${money(yr.v, true)}</td><td class="cum">${money(cums[idx])}</td></tr>`;
