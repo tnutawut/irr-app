@@ -49,7 +49,7 @@
   }
 
   /* ─── บันไดกระแสเงินสด: รวมปีติดกันที่ยอดเท่ากันเป็นขั้นเดียว ไต่ขึ้นตามปี ─── */
-  function staircase(ys, dividend) {
+  function staircase(ys, dividend, compact) {
     const groups = [];
     ys.forEach((y, k) => {
       const g = groups[groups.length - 1];
@@ -59,7 +59,8 @@
     });
 
     const n = groups.length;
-    const W = 678, H = dividend ? (ys.length > 18 ? 214 : 236) : 292;
+    // compact = มีกรอบความคุ้มครองอุบัติเหตุ (แบบรหัส K) ใต้บันได แบบมีปันผลต้องเตี้ยลงให้พอดี A4
+    const W = 678, H = (dividend ? (ys.length > 18 ? 214 : 236) : 292) - (compact && dividend ? 56 : 0);
     const weights = groups.map((g) => (g.last ? 1.55 : 1));
     const unit = W / weights.reduce((a, b) => a + b, 0);
     const dLast = Math.min(dividend ? 108 : 132, unit * 1.55 - 10);
@@ -95,6 +96,29 @@
     return `<div class="st" style="height:${H}px">${html}</div>`;
   }
 
+  /* ─── ความคุ้มครองค่ารักษาพยาบาลอุบัติเหตุฉุกเฉิน (แบบรหัส K): วงเงิน = เบี้ย ÷ 12 × 5 ตัดเศษสตางค์ ─── */
+  function accidentCover(premium, endYear) {
+    const amount = Math.floor((Number(premium) || 0) * 5 / 12);
+    // เส้นจุดไข่ปลาวงกลม ไล่สีฟ้า → เขียว (วาดเป็น SVG ทีละจุด ใช้ได้ทั้งบนจอและใน PDF) เว้นช่วงกลางให้ข้อความ
+    const W = 640, cy = 7, from = 16, to = W - 16, gap = 9, mid = W / 2, hole = 92;
+    const color = (x) => { const t = x / W; return `rgb(0,${Math.round(174 + 17 * t)},${Math.round(239 - 140 * t)})`; };
+    let dots = "";
+    for (let x = from; x <= to; x += gap) if (Math.abs(x - mid) > hole) dots += `<circle cx="${x}" cy="${cy}" r="2.2" fill="${color(x)}"/>`;
+    dots += `<circle cx="6" cy="${cy}" r="6" fill="${color(0)}"/><circle cx="${W - 6}" cy="${cy}" r="6" fill="${color(W)}"/>`;
+    return `
+  <div class="cv">
+    <div class="cv-top">
+      <div class="cv-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 4.6-3 8.4-7 10-4-1.6-7-5.4-7-10V6l7-3z" fill="none" stroke="#fff" stroke-width="1.9" stroke-linejoin="round"/><path d="M8.6 12.2l2.3 2.3 4.5-4.6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div>
+        <p class="cv-l1">มีความคุ้มครองค่ารักษาพยาบาลอุบัติเหตุฉุกเฉิน <span class="nw">วงเงิน <b class="cv-amt">${num(amount)}</b> <b class="cv-baht">บาท</b></span> <span class="nw">ต่อครั้ง ต่อเหตุการณ์</span></p>
+        <p class="cv-l2">(วงเงิน <b class="cv-x5">5 เท่า</b> ของเบี้ยเฉลี่ยรายเดือน)</p>
+      </div>
+    </div>
+    <div class="cv-line"><svg viewBox="0 0 ${W} 14" aria-hidden="true">${dots}</svg><span>คุ้มครองตลอดสัญญา ${esc(endYear)} ปี</span></div>
+    <div class="cv-ends"><span>เริ่มสัญญา</span><b>ปีที่ ${esc(endYear)}</b></div>
+  </div>`;
+  }
+
   /* ─── สร้าง One Page ─── */
   function build(row, cf, taxRate) {
     const ys = years(cf);
@@ -108,6 +132,7 @@
 
     let cum = 0;
     const cums = ys.map((y) => (cum += y.v));
+    const isK = /^K/.test(row.code);   // แบบรหัสขึ้นต้นด้วย K มีความคุ้มครองค่ารักษาพยาบาลอุบัติเหตุ
 
     const chips = [
       genderTh(row.gender), "อายุ " + ageTxt(row.age) + " ปี", "เบี้ย " + num(row.premium) + " บาท/ปี",
@@ -152,7 +177,8 @@
 <section class="ps-card">
   <div class="ps-ch"><h2>เส้นทางเงินของคุณ</h2>
     <div class="ps-lg"><span><i class="neg"></i>ชำระเบี้ย</span><span><i class="pos"></i>รับเงินคืน</span></div></div>
-  ${staircase(ys, row.dividend)}
+  ${staircase(ys, row.dividend, isK)}
+  ${isK ? accidentCover(row.premium, last.label) : ""}
 </section>`;
 
     if (row.dividend) {
