@@ -272,6 +272,48 @@
     }
   }
 
+  /* ─── พิมพ์จากไฟล์ PDF ที่แอปสร้าง (ได้ A4 หน้าเดียว สีตรงกันทุกเครื่อง) ─── */
+  async function printPdf() {
+    const btn = $("psPrint");
+    const label = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "กำลังเตรียม…";
+    try {
+      const blob = await current.pdf;
+      const name = fileName(current.row);
+      const file = new File([blob], name, { type: "application/pdf" });
+      // iPhone / iPad: เปิดเมนูแชร์ แล้วเลือก "พิมพ์"
+      if (navigator.maxTouchPoints > 0 && navigator.canShare && navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file], title: name }); return; }
+        catch (e) { if (e && e.name === "AbortError") return; }
+      }
+      const url = URL.createObjectURL(blob);
+      setTimeout(() => URL.revokeObjectURL(url), 120000);
+      // Safari บน Mac: เปิด PDF ในแท็บใหม่ แล้วกดพิมพ์จากหน้านั้น
+      if (/^((?!chrome|chromium|crios|edg|android).)*safari/i.test(navigator.userAgent)) {
+        if (!window.open(url, "_blank")) location.href = url;
+        return;
+      }
+      // Chrome / Edge / Firefox (Windows, Mac): โหลด PDF ในกรอบซ่อนแล้วเปิดหน้าต่างพิมพ์ทันที
+      const frame = document.createElement("iframe");
+      frame.style.cssText = "position:fixed;right:0;bottom:0;width:1px;height:1px;border:0;opacity:0";
+      frame.src = url;
+      frame.onload = () => {
+        setTimeout(() => {
+          try { frame.contentWindow.focus(); frame.contentWindow.print(); }
+          catch (e) { if (!window.open(url, "_blank")) location.href = url; }
+        }, 300);
+      };
+      document.body.appendChild(frame);
+      setTimeout(() => frame.remove(), 120000);
+    } catch (e) {
+      alert(e.message || "เตรียมไฟล์พิมพ์ไม่สำเร็จ");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = label;
+    }
+  }
+
   /* ─── หน้าต่างดูตัวอย่าง ─── */
   let lastScale = 0;
   function fit() {
@@ -306,11 +348,7 @@
   document.addEventListener("click", (e) => {
     if (e.target.closest("#psClose")) close();
     if (e.target.closest("#psPdf") && current) savePdf();
-    if (e.target.closest("#psPrint")) {
-      const img = $("psSheet").querySelector("img");
-      const go = () => window.print();
-      if (img && !img.complete) img.onload = go; else go();
-    }
+    if (e.target.closest("#psPrint") && current) printPdf();
   });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("psOverlay").hidden) close(); });
 
