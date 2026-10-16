@@ -492,6 +492,7 @@ body.ps-open { overflow: hidden; }
 }
 .st-dot.neg { background: var(--deep); }
 .st-dot.pos { background: var(--logo-green); }
+.st-dot.zero { background: #A3B1C0; }
 .st-dot b { font: 700 13px/1.1 var(--f-display); white-space: nowrap; letter-spacing: -.01em; }
 .st-dot i { font: 500 8.5px/1.3 var(--f-display); font-style: normal; opacity: .9; }
 .st-col.last .st-dot { box-shadow: 0 0 0 6px rgba(0, 191, 99, .18), 0 14px 30px -12px rgba(0, 120, 60, .7); }
@@ -579,6 +580,7 @@ body.ps-open { overflow: hidden; }
 .ps-tb td:first-child { color: var(--mute); font: 500 9.5px/1.5 var(--f-display); }
 .ps-tb td.neg { color: var(--deep); }
 .ps-tb td.pos { color: #00994F; font-weight: 600; }
+.ps-tb td.zero { color: #9AA8B8; }
 .ps-tb td.cum { color: #111; }
 .ps-tb tr.mat td { background: rgba(0, 191, 99, .1); font-weight: 700; }
 .ps-tb tr.mat td.pos { color: var(--logo-green); font-size: 12px; }

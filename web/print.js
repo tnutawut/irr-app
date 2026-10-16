@@ -76,6 +76,7 @@
       const lift = liftMin + k * step;                          // ความสูงของขั้น
       const size = g.last ? dLast : d;
       const pos = g.v >= 0;
+      const zero = Math.round(g.v) === 0;                       // ปีที่ยอดเป็น 0 = วงกลมสีเทา
       // ขนาดตัวเลขพอดีวงกลม (ตัวเลขยาวจะเล็กลง ไม่ล้นขอบ)
       const chars = signed(g.v).length;
       const fs = Math.min(g.last ? 22 : 15, (size * 0.84) / (chars * 0.6));
@@ -86,7 +87,7 @@
       <div class="st-col${g.last ? " last" : ""}" style="left:${x}px;width:${w}px">
         <div class="st-step" style="height:${lift}px;bottom:${strip}px"></div>
         <div class="st-yr">${yrs}</div>
-        <div class="st-dot ${pos ? "pos" : "neg"}" style="width:${size}px;height:${size}px;bottom:${strip + lift - size * 0.45}px">
+        <div class="st-dot ${zero ? "zero" : pos ? "pos" : "neg"}" style="width:${size}px;height:${size}px;bottom:${strip + lift - size * 0.45}px">
           <b style="font-size:${fs}px">${signed(g.v)}</b><i>${sub}</i>
         </div>
         ${g.last && dividend ? `<div class="st-plus" style="bottom:${strip + lift - size * 0.45 - 20}px">(และโอกาสรับเงินปันผล)</div>` : ""}
@@ -218,7 +219,7 @@
           : yr.v > 0 ? back
           : idx === 0 || Math.round(-yr.v) === Math.round(row.premium) ? prem
           : prem + '<i class="dm"> − </i>' + back;
-        const tr = `<tr${isLast ? ' class="mat"' : ""}><td>${yLabel}</td><td class="desc">${desc}</td><td class="${yr.v < 0 ? "neg" : "pos"}">${money(yr.v, true)}</td><td class="cum">${money(cums[idx])}</td></tr>`;
+        const tr = `<tr${isLast ? ' class="mat"' : ""}><td>${yLabel}</td><td class="desc">${desc}</td><td class="${Math.round(yr.v) === 0 ? "zero" : yr.v < 0 ? "neg" : "pos"}">${money(yr.v, true)}</td><td class="cum">${money(cums[idx])}</td></tr>`;
         // แบบมีปันผล: บรรทัดถัดจากเงินครบกำหนด ชิดมุมขวา แยกจากแถวเงินครบกำหนด (ตามที่เจ้าของกำหนด)
         return isLast && row.dividend ? tr + '<tr class="matplus"><td colspan="4">(และมีโอกาสรับเงินปันผล)</td></tr>' : tr;
       }).join("")}</tbody></table>`;
