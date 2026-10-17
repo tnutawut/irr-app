@@ -269,10 +269,7 @@ body.ready .top-art .dots path:nth-child(3) { animation-delay: 1.6s; }
   font: 700 30px/1.1 var(--f-display);
   letter-spacing: .05em;
   vertical-align: -3px;
-  background: linear-gradient(120deg, var(--blue) 10%, var(--sky) 90%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--deep);   /* สีเดียวกับตัวเลขคำตอบ (.res-irr) */
 }
 .res-irr {
   margin: 2px 0 4px;
