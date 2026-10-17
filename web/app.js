@@ -184,7 +184,9 @@
       "</ul>"
     );
 
-    parts.push('<p class="res-label">' + (row.dividend ? "IRR (ไม่รวมเงินปันผล)" : "ผลตอบแทน IRR") + "</p>");
+    // คำว่า IRR ตัวใหญ่เด่น (หน้านี้หาคำตอบ IRR เป็นหลัก) ข้อความอื่นคงเดิม
+    const irrT = '<b class="res-irr-t">IRR</b>';
+    parts.push('<p class="res-label">' + (row.dividend ? irrT + " (ไม่รวมเงินปันผล)" : "ผลตอบแทน " + irrT) + "</p>");
     parts.push(row.irr == null
       ? '<p class="res-irr na">ไม่มีข้อมูล IRR</p>'
       : '<p class="res-irr">' + fmtPct(row.irr) + "<small>%</small></p>");
