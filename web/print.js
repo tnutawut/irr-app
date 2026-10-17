@@ -101,7 +101,7 @@
   function accidentCover(premium, endYear) {
     const amount = Math.floor((Number(premium) || 0) * 5 / 12);
     // เส้นจุดไข่ปลาวงกลม ไล่สีฟ้า → เขียว (วาดเป็น SVG ทีละจุด ใช้ได้ทั้งบนจอและใน PDF) เว้นช่วงกลางให้ข้อความ
-    const W = 640, cy = 7, from = 16, to = W - 16, gap = 9, mid = W / 2, hole = 92;
+    const W = 640, cy = 7, from = 16, to = W - 16, gap = 9, mid = W / 2, hole = 108;
     const color = (x) => { const t = x / W; return `rgb(0,${Math.round(174 + 17 * t)},${Math.round(239 - 140 * t)})`; };
     let dots = "";
     for (let x = from; x <= to; x += gap) if (Math.abs(x - mid) > hole) dots += `<circle cx="${x}" cy="${cy}" r="2.2" fill="${color(x)}"/>`;

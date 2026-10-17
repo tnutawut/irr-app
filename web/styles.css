@@ -521,9 +521,9 @@ body.ps-open { overflow: hidden; }
 .cv-baht { font: 600 13px/1 var(--f-display); color: #00994F; }
 .cv-l2 { margin: 3px 0 0; font-size: 10.5px; line-height: 1.5; color: var(--mute); }
 .cv-x5 { display: inline-block; padding: 0 8px; border-radius: 999px; background: var(--logo-green); color: #fff; font: 600 11.5px/18px var(--f-display); margin: 0 1px; }
-.cv-line { position: relative; margin: 11px 0 0; height: 14px; }
+.cv-line { position: relative; margin: 12px 0 0; height: 16px; }
 .cv-line svg { position: absolute; inset: 0; width: 100%; height: 14px; display: block; }
-.cv-line span { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font: 600 10.5px/1 var(--f-display); color: #007A3F; white-space: nowrap; }
+.cv-line span { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font: 600 13.5px/1 var(--f-display); color: #007A3F; white-space: nowrap; }
 .cv-ends { display: flex; justify-content: space-between; margin-top: 3px; font: 500 9.5px/1.4 var(--f-display); color: var(--mute); }
 .cv-ends b { color: var(--deep); font-weight: 600; }
 
